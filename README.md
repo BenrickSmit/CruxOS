@@ -54,10 +54,12 @@ CruxOS will provide the following features at the moment of completion.
 
 # Future Changes
 CruxOS future versions will likely contain the following features:
-  <code> - Environmental Status</code>
-  <code> - Simple Smart Home Integration (?)</code>
-  <code> - Bluetooth Smartphone Control (Music, etc)</code>
-  <code> - GPS Information</code>
+```
+   - Environmental Status
+   - Simple Smart Home Integration (?)
+   - Bluetooth Smartphone Control (Music, etc)
+   - GPS Information
+```
 
 
 # How to Run
@@ -68,12 +70,12 @@ N/A Yet
 
 # Key Dependencies
 This System in currently dependent on the following Arduino Libraries:
-  <code> - Wifi</code>
-  <code> - Adafruit GFX Library</code>
-  <code> - Adafruit BusIO</code>
-  <code> - </code>
-  <code> - ESP32 BLE</code>
-
+```  
+   - Wifi
+   - Adafruit GFX Library
+   - Adafruit BusIO
+   - ESP32 BLE
+```
 
 # How to contribute
 This project will follow most of the OpenCV rules for coding best practices while keeping to the Arduino code variation where necessary. 
