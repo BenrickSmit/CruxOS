@@ -22,30 +22,30 @@ Find the project [here](https://github.com/BenrickSmit/CruxOS), if you did not f
 
 # Features
 CruxOS will provide the following features at the moment of completion.
-  <code> - Read and Write Wifi Access</code>
-  <code> - Read and Write "RAM" Access</code>
-  <code> - Read and Write "Storage" Access</code>
-  <code> - Read and Write Bluetooth Access</code>
-  <code> - Read Pedometer</code>
-  <code> - Read Gryoscope</code>
-  <code> - Read Battery Percentage</code>
-  <code>  </code>
-  <code> - Custom Variable Allocation</code>
-  <code> - Custom Variable Read</code>
-  <code> - Possible Mutex Data</code>
-  <code>  </code>
-  <code> - Time Faces (Classic, Digital, Minimalist)</code>
-  <code> - Settings (System & Personal)</code>
-  <code> - Historical Data (as far as possible)</code>
-  <code> - Weather Data (as much as possible)</code>
-  <code> - About CruxOS</code>
-  <code>  </code>
-  <code> - Wifi Position (if possible)</code>
-  <code> - Wifi Weather Data (if possible)</code>
-  <code> - Day and Week Step Counter</code>
-  <code> - Button Navigation</code>
-  <code> - Personal Data for recovery</code>
-  <code> - Bluetooth connection to smartphones</code>
+  <code> - Read and Write Wifi Access
+  <code> - Read and Write "RAM" Access
+  <code> - Read and Write "Storage" Access
+  <code> - Read and Write Bluetooth Access
+  <code> - Read Pedometer
+  <code> - Read Gryoscope
+  <code> - Read Battery Percentage
+  <code>  
+  <code> - Custom Variable Allocation
+  <code> - Custom Variable Read
+  <code> - Possible Mutex Data
+  <code>  
+  <code> - Time Faces (Classic, Digital, Minimalist)
+  <code> - Settings (System & Personal)
+  <code> - Historical Data (as far as possible)
+  <code> - Weather Data (as much as possible)
+  <code> - About CruxOS
+  <code>  
+  <code> - Wifi Position (if possible)
+  <code> - Wifi Weather Data (if possible)
+  <code> - Day and Week Step Counter
+  <code> - Button Navigation
+  <code> - Personal Data for recovery
+  <code> - Bluetooth connection to smartphones
   <code> - Navigatible Keyboard for Use (Varing Implementation may be possible.)</code>
   
   
