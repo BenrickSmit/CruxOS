@@ -23,31 +23,31 @@ Find the project [here](https://github.com/BenrickSmit/CruxOS), if you did not f
 # Features
 CruxOS will provide the following features at the moment of completion.
 '''
-  <code> - Read and Write Wifi Access
-  <code> - Read and Write "RAM" Access
-  <code> - Read and Write "Storage" Access
-  <code> - Read and Write Bluetooth Access
-  <code> - Read Pedometer
-  <code> - Read Gryoscope
-  <code> - Read Battery Percentage
-  <code>  
-  <code> - Custom Variable Allocation
-  <code> - Custom Variable Read
-  <code> - Possible Mutex Data
-  <code>  
-  <code> - Time Faces (Classic, Digital, Minimalist)
-  <code> - Settings (System & Personal)
-  <code> - Historical Data (as far as possible)
-  <code> - Weather Data (as much as possible)
-  <code> - About CruxOS
-  <code>  
-  <code> - Wifi Position (if possible)
-  <code> - Wifi Weather Data (if possible)
-  <code> - Day and Week Step Counter
-  <code> - Button Navigation
-  <code> - Personal Data for recovery
-  <code> - Bluetooth connection to smartphones
-  <code> - Navigatible Keyboard for Use (Varing Implementation may be possible.)
+   - Read and Write Wifi Access
+   - Read and Write "RAM" Access
+   - Read and Write "Storage" Access
+   - Read and Write Bluetooth Access
+   - Read Pedometer
+   - Read Gryoscope
+   - Read Battery Percentage
+    
+   - Custom Variable Allocation
+   - Custom Variable Read
+   - Possible Mutex Data
+    
+   - Time Faces (Classic, Digital, Minimalist)
+   - Settings (System & Personal)
+   - Historical Data (as far as possible)
+   - Weather Data (as much as possible)
+   - About CruxOS
+    
+   - Wifi Position (if possible)
+   - Wifi Weather Data (if possible)
+   - Day and Week Step Counter
+   - Button Navigation
+   - Personal Data for recovery
+   - Bluetooth connection to smartphones
+   - Navigatible Keyboard for Use (Varing Implementation may be possible.)
 '''
   
   
