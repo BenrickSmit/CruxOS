@@ -1,12 +1,12 @@
-# GeneralCXXTemplate
-A basic C++ Project template file structure created to help me with sideprojects. It allows the easy creation of libraries, profiling information, tests, and more.
+# CruxOS
+This is an Open Source Operating System for smart watches based on the TTGO Micro-32 arduino processor for the OpenSmartwatch designed by "Paul's 3D Things".
 
 # Description
-This is a general C++ template project structure. It comes with automated
-documentation, automated testing (using gtest), automated profiling (using gprof) and CMake
-to help with the execution.
+CruxOS is designed with microprocessors in mind. Not only will it make sure that the OS can expand based on the available resources of the processor, but it will make sure to use it to its fullest to do everything programmatically, sytematically, and as quickly as possible. Even if it'll need some additional "compatibility layers".
 
+CruxOS is meant to be the smallest OS possible, while still being able to be run on different microprocessors and not dependent on the available peripherals. Expandability will likely come in second or third revisions but is ultimately a goal.
 
+There is some additional executables and documentation which may or may not work at this point in time. These include:
 <code>init_documentation.sh</code> is used to create the documentation automatically
 <code>run_all.sh</code> is used to run all tests and program execution, as well as to create the necessary documentation and profile information
 <code>run_application.sh</code> is used to run only the application
@@ -18,25 +18,66 @@ to help with the execution.
 <code>build_version</code> contains the project version number. 
 <code>build_cxx_standard</code> contains the CXX standard used, it's default is 11
 
-Find the project [here](https://github.com/BenrickSmit/GeneralCXXTemplate), if you did not find this project on my github.
+Find the project [here](https://github.com/BenrickSmit/CruxOS), if you did not find this project on my github.
 
 # Features
-This states the current features provided by the program
+CruxOS will provide the following features at the moment of completion.
+  <code> - Read and Write Wifi Access</code>
+  <code> - Read and Write "RAM" Access</code>
+  <code> - Read and Write "Storage" Access</code>
+  <code> - Read and Write Bluetooth Access</code>
+  <code> - Read Pedometer</code>
+  <code> - Read Gryoscope</code>
+  <code> - Read Battery Percentage</code>
+  <code>  </code>
+  <code> - Custom Variable Allocation</code>
+  <code> - Custom Variable Read</code>
+  <code> - Possible Mutex Data</code>
+  <code>  </code>
+  <code> - Time Faces (Classic, Digital, Minimalist)</code>
+  <code> - Settings (System & Personal)</code>
+  <code> - Historical Data (as far as possible)</code>
+  <code> - Weather Data (as much as possible)</code>
+  <code> - About CruxOS</code>
+  <code>  </code>
+  <code> - Wifi Position (if possible)</code>
+  <code> - Wifi Weather Data (if possible)</code>
+  <code> - Day and Week Step Counter</code>
+  <code> - Button Navigation</code>
+  <code> - Personal Data for recovery</code>
+  <code> - Bluetooth connection to smartphones</code>
+  <code> - Navigatible Keyboard for Use (Varing Implementation may be possible.)</code>
+  
+  
 
 # Future Changes
-This gives information on the future changes that are likely to be implemented.
+CruxOS future versions will likely contain the following features:
+  <code> - Environmental Status</code>
+  <code> - Simple Smart Home Integration (?)</code>
+  <code> - Bluetooth Smartphone Control (Music, etc)</code>
+  <code> - GPS Information</code>
+
 
 # How to Run
-This gives information on how to normally run the python program
+N/A Yet
 
 # How to Run Unit Tests
-This gives information on how to normally run the python program's tests
+N/A Yet
 
 # Key Dependencies
-This gives information on the dependencies required by the python program
+This System in currently dependent on the following Arduino Libraries:
+  <code> - Wifi</code>
+  <code> - Adafruit GFX Library</code>
+  <code> - Adafruit BusIO</code>
+  <code> - </code>
+  <code> - ESP32 BLE</code>
+
 
 # How to contribute
-This states how others can contribute to the project, and what styles to use
+This project will follow most of the OpenCV rules for coding best practices while keeping to the Arduino code variation where necessary. 
+For more information on the coding style, go to [OpenCV](https://github.com/opencv/opencv/wiki/Coding_Style_Guide).
+
+As for contributions, please feel free to contribute via branches, bug reports, and eventually possibly buying me a coffee.
 
 # License
 This states the [licence](LICENSE)
