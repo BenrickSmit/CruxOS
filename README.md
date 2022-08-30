@@ -22,7 +22,7 @@ Find the project [here](https://github.com/BenrickSmit/CruxOS), if you did not f
 
 # Features
 CruxOS will provide the following features at the moment of completion.
-'''
+<code>
    - Read and Write Wifi Access
    - Read and Write "RAM" Access
    - Read and Write "Storage" Access
@@ -48,7 +48,7 @@ CruxOS will provide the following features at the moment of completion.
    - Personal Data for recovery
    - Bluetooth connection to smartphones
    - Navigatible Keyboard for Use (Varing Implementation may be possible.)
-'''
+</code>
   
   
 
