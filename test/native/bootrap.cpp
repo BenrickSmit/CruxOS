@@ -1,4 +1,3 @@
-#include <Arduino.h>
 #include <gtest/gtest.h>
 
 #include <cruxos_constants.h>
@@ -11,7 +10,7 @@ int main(int argc, char **argv) {
   return RUN_ALL_TESTS();
 }
 
-
+/**
 /** For Embedded Tests*/
 void setup(){
     Serial.begin(BAUD_RATE);
@@ -24,3 +23,4 @@ void setup(){
         Serial.println("Tests Failures Ignored: FAIL");
     }
 }
+*/

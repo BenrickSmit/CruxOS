@@ -6,6 +6,7 @@
 
 #include <SystemInfo.h>
 
+
 // Write Test Functions
 TEST (SystemInfo_Test, test_arduino_info_is_valid) {
     SystemInfo sys;
@@ -22,7 +23,6 @@ TEST (SystemInfo_Test, test_cpu_core_value_valid) {
 
     ASSERT_TRUE(is_valid);
 }
-
 
 
 
