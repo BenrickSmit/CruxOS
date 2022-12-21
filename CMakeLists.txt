@@ -41,12 +41,12 @@ if(${BOOL_CREATE_TESTS})
     enable_testing()
 
     ## Add the Google Test (gtest) unit testing framework
-    add_subdirectory(lib/googletest-release-1.10.0 EXCLUDE_FROM_ALL)
+    add_subdirectory(lib/googletest-release-1.11.0 EXCLUDE_FROM_ALL)
     ## Prevent overriding the parent project's compiler/linker settings on Windows
     set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
     
     ## Add the Unit Tests
-    add_subdirectory(tests)
+    add_subdirectory(test)
 endif()
 
 ##-----------------------------------------------------------------------------=

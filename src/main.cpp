@@ -1,11 +1,33 @@
-#include <iostream>
+#include <Arduino.h>
+#include <Wire.h>
 
-#include "TestingClass.h"
+#include <cruxos_constants.h>
+#include <SystemInfo.h>
+#include <MemoryManagement.h>
 
-int main(int argc, char** argv){
-    TestingClass input(5);
+SystemInfo info;
 
-    std::cout << "Saluton Mundo!" << std::endl;
-    std::cout << "Input Number 5: " << input.get_value() << std::endl;
-    return 0;
+void setup() {
+  // put your setup code here, to run once:
+  Serial.begin(BAUD_RATE);
 }
+
+void counter() {
+  int32_t result = 0;
+  for(int16_t i = 0; i < 10; i++){
+    result = result * i;
+  }
+
+  Serial.println("Result Value: " + String(result));
+}
+
+void loop() {
+  //This is the loopable code
+  delay(1000);
+  info.serial_print();
+
+}
+
+
+//Definitions
+

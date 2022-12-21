@@ -1,4 +1,8 @@
-# CruxOS
+# CruxOS: Camelia
+This is an embedded OS for Paul's 3D Things ESP32 based smartwatch. It is written
+in C++11 and could possibly work on other versions of the smartwatch, or even
+different smartwatches.
+
 This is an Open Source Operating System for smart watches based on the TTGO Micro-32 arduino processor for the OpenSmartwatch designed by "Paul's 3D Things".
 
 # Description
@@ -77,12 +81,36 @@ This System in currently dependent on the following Arduino Libraries:
    - ESP32 BLE
 ```
 
-# How to contribute
-This project will follow most of the OpenCV rules for coding best practices while keeping to the Arduino code variation where necessary. 
-For more information on the coding style, go to [OpenCV](https://github.com/opencv/opencv/wiki/Coding_Style_Guide).
 
-As for contributions, please feel free to contribute via branches, bug reports, and eventually possibly buying me a coffee.
+# Instructions
+No instructions thus far
 
-# License
-This states the [licence](LICENSE)
+# Contribution
+Any code contributions are welcome
 
+# C++ Coding Style Guideline
+The projects's style guide is based on the OpenCV style guide with a few 
+differences.
+
+To summarise the style guide:
+    -   We do not use the Allman style for indentation - Curly braces do not have
+        to go on separate lines
+    -   We use tabs for indendation and not spaces
+    -   Use Unix-style line endings (LF) and not Windows-style line endings (CRLF)
+    -   Follow the Google C++ style guide:
+        -   Do not use namespaces
+        -   Do not use the 'const' keyword for function arguments unless 
+            necessary.
+        -   Do not use the 'explicit' keyword for single-argument constructors
+    -   Do  use nullptr instead of NULL
+    -   Use snake_case for functions, but CamelCase for Type names with the 
+        first letter capitilised
+    -   Use ALL_CAPS for macro names.
+    -   Use descriptive names for functions, variables, and types
+    -   Use 'const' wherever possible to make code easier to read and maintain
+    -   Use 'inline' sparingly as this can increase file sizes for the already
+        small memory of the smartwatch.
+
+
+# LICENSE
+This software is licensed under the [GPL 3.0 License](LICENSE)
