@@ -16,11 +16,13 @@ void setup() {
 
   // Memory Manager Instantiation.
   MemoryManagement *mm = mm->get_instance();
-  MemoryManagement::create_variable("Time", "24:00");
-  MemoryManagement::create_variable("Weather_Data", "Cloudy");
-  MemoryManagement::create_variable("Bluetooth", "Not-Connected");
-  MemoryManagement::create_variable("SSID", "Unknown");
-  MemoryManagement::create_variable("SSID_Password", "Unknown");
+  MemoryManagement::create_variable(CN_TIME_VAR, "24:00");
+  MemoryManagement::create_variable(CN_WEATHER_VAR, "Cloudy");
+  MemoryManagement::create_variable(CN_WEATHER_TEMP_CURR_VAR, "77");
+  MemoryManagement::create_variable(CN_EST_LOCATION_VAR, "New York");
+  MemoryManagement::create_variable(CN_BLUETOOTH_CONNECTION_VAR, "Not-Connected");
+  MemoryManagement::create_variable(CN_SSID_NAME_VAR, "Unknown");
+  MemoryManagement::create_variable(CN_SSID_PASSWORD_VAR, "Unknown");
 }
 
 void counter() {

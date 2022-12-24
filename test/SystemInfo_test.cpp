@@ -11,7 +11,7 @@
 TEST (SystemInfo_Test, test_arduino_info_is_valid) {
     SystemInfo sys;
     std::string arduino_version = sys.get_arduino_version();
-    bool is_valid = std::regex_match(arduino_version, std::regex("\\[0-9][0-9].\\[0-9][0-9].\\[0-9][0-9]"));
+    bool is_valid = std::regex_match(arduino_version, std::regex("[0-9]{1,2}\\.[0-9]{1,2}\\.[0-9]{1,3}"));
 
     ASSERT_TRUE(is_valid);
 }
@@ -23,7 +23,6 @@ TEST (SystemInfo_Test, test_cpu_core_value_valid) {
 
     ASSERT_TRUE(is_valid);
 }
-
 
 
 

@@ -14,6 +14,7 @@
 #include <sstream>
 #include <cassert>
 #include <fstream>
+#include <limits>
 #include <Arduino.h>
 
 /** MemoryManagement Error Codes:
@@ -64,13 +65,23 @@ protected:
     /// @return This is the input variable in lowercase.
     static std::string lowercase(std::string& input);
     /// @brief This function determines whether an input string has any whitespace whatsoever
-    /// @param input This is the function which may or may not contain whitespace
+    /// @param input This is the string which may or may not contain whitespace
     /// @return This function returns true should the string contain any whitespace at all.
     static bool has_whitespace(std::string& input);
+    /// @brief This function determines whether an input string has any alphabetical characters at all
+    /// @param input This is the string which may or may not contain whitespace
+    /// @return This function returns true should the string contain any whitespace at all.
+    static bool has_alpha(std::string& input);
+
+    /// @brief This function cleans the input strings by separating all spaced values and comma separated values
+    ///          and only returning up until the first value.
+    /// @param input This is the input string that potentially contains a space or a comma
+    /// @return return a cleaned string for later use.
+    static std::string clean_string(std::string& input);
 
 private:
     /// @brief This is the default constructor for a singleton
-    MemoryManagement() {m_instance = NULL; Serial.begin(9600);};
+    MemoryManagement() {m_instance = NULL; Serial.begin(115200);};
     /// @brief This is the default copy constructor for a singleton
     /// @param MemoryManagement is the const MemoryManagement& object for a singleton
     MemoryManagement(const MemoryManagement&) = delete;
