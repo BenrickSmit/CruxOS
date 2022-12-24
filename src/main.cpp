@@ -41,12 +41,12 @@ void loop() {
 
   Serial.print("Var Count: ");
   Serial.println(MemoryManagement::count_variables());
-  MemoryManagement::modify_variable("Time", "14:00");
+  MemoryManagement::modify_variable(CN_TIME_VAR, "14:00");
   Serial.print("Time: ");
-  Serial.println(MemoryManagement::get_value("Time").c_str());
-  MemoryManagement::modify_variable("Time", "44:00");
+  Serial.println(MemoryManagement::get_value(CN_TIME_VAR).c_str());
+  MemoryManagement::modify_variable(CN_TIME_VAR, "44:00");
   Serial.print("Time: ");
-  Serial.println(MemoryManagement::get_value("Time").c_str());
+  Serial.println(MemoryManagement::get_value(CN_TIME_VAR).c_str());
 
 }
 

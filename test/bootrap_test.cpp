@@ -10,7 +10,7 @@
 void setup()
 {
     // should be the same value as for the `test_speed` option in "platformio.ini"
-    // default value is test_speed=115200
+    // default value is test_speed=9600
     Serial.begin(BAUD_RATE);
 
     ::testing::InitGoogleTest();

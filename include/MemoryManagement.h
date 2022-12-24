@@ -81,7 +81,7 @@ protected:
 
 private:
     /// @brief This is the default constructor for a singleton
-    MemoryManagement() {m_instance = NULL; Serial.begin(115200);};
+    MemoryManagement() {m_instance = NULL; Serial.begin(9600);};
     /// @brief This is the default copy constructor for a singleton
     /// @param MemoryManagement is the const MemoryManagement& object for a singleton
     MemoryManagement(const MemoryManagement&) = delete;

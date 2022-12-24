@@ -11,7 +11,7 @@
 #include <Arduino.h>
 
 // Basic Data Properties
-const u_int32_t BAUD_RATE = 115200;//115200;//115200;921600;
+const u_int32_t BAUD_RATE = 9600;//9600;//9600;921600;
 
 // Basic Board Properties
 const u_int8_t BUILTIN_LED_PIN = 17;
@@ -19,6 +19,8 @@ const u_int8_t BUILTIN_BTN2_PIN = 18;
 const u_int8_t BUILTIN_BTN3_PIN = 16;
 
 // Basic Properties
+const u_int16_t TIME_UPDATE_COUNTER = 10;                // 10 seconds
+const u_int16_t WIFI_CONN_COUNTER = 30000;               // 30 minutes
 
 // Variables to Create at Runtime
 const std::string CN_TIME_VAR = "CURRENT_TIME";
