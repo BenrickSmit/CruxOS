@@ -14,6 +14,11 @@
 #include <sstream>
 #include <cassert>
 #include <fstream>
+#include <Arduino.h>
+
+/** MemoryManagement Error Codes:
+ * MM_VAR_FIND_ISSUE - Cannot find the variable in question
+*/
 
 class MemoryManagement
 {
@@ -21,7 +26,7 @@ public:
     /// @brief This function returns the static instance of the singleton class Memory Management
     ///        to ensure the variables stay until the end of the program's life.
     /// @return an instance of this class
-    static MemoryManagement& get_instance();
+    static MemoryManagement* get_instance();
     
     /// @brief This function is responsible for the creation of the variables that can be used later
     /// @param variable_name This is the unique name you would like to give the variable.
@@ -65,12 +70,12 @@ protected:
 
 private:
     /// @brief This is the default constructor for a singleton
-    MemoryManagement();
+    MemoryManagement() {m_instance = NULL; Serial.begin(9600);};
     /// @brief This is the default copy constructor for a singleton
     /// @param MemoryManagement is the const MemoryManagement& object for a singleton
     MemoryManagement(const MemoryManagement&) = delete;
     /// @brief The basic destructor for a singleton
-    ~MemoryManagement();
+    ~MemoryManagement() {};
     /// @brief This is the overloaded assignment operator for a singleton
     /// @param  
     /// @return 
@@ -78,7 +83,7 @@ private:
 
     // Normally I'd have to delete these pointers manually but the unique_ptr takes care of this for me
     std::map<std::string, std::shared_ptr<std::string>> m_pointer_map_data;    // This map stores the names to the pointers that will be used for data storage.
-
+    static MemoryManagement* m_instance;
 };
 
 #endif

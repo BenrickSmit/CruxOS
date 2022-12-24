@@ -1,15 +1,19 @@
 #include "MemoryManagement.h"
 
-MemoryManagement& MemoryManagement::get_instance() {
-    static MemoryManagement instance;
+MemoryManagement *MemoryManagement::m_instance = nullptr;
 
-    return instance;
+MemoryManagement* MemoryManagement::get_instance() {
+    if (!m_instance){
+        m_instance = new MemoryManagement();
+    }
+
+    return m_instance;
 }
 
 void MemoryManagement::delete_variable(const std::string& variable_name) {
     // Deletes the variable from the map
-    MemoryManagement& instance = get_instance();
-    instance.m_pointer_map_data.erase(variable_name);
+    MemoryManagement* instance = get_instance();
+    instance->m_pointer_map_data.erase(variable_name);
 }
 
 
@@ -17,10 +21,10 @@ void MemoryManagement::display_variables() {
     // Displays the list of variables using the default display method
     std::string complete_list = "";
 
-    MemoryManagement& instance = get_instance();
+    MemoryManagement* instance = get_instance();
 
     /* // Does not work for Embedded Systems
-    for (std::map<std::string, std::shared_ptr<std::string&>>::key_type variable_name : instance.m_pointer_map_data){
+    for (std::map<std::string, std::shared_ptr<std::string&>>::key_type variable_name : instance->m_pointer_map_data){
         complete_list += complete_list + variable_name + "\n";
     }
 
@@ -38,20 +42,29 @@ void MemoryManagement::display_variables() {
 
 int MemoryManagement::count_variables() {
     // returns a number representing the number of stored variables in the map
-    MemoryManagement& instance = get_instance();
-    return instance.m_pointer_map_data.size();
+    MemoryManagement* instance = get_instance();
+    return instance->m_pointer_map_data.size();
 }
 
 void MemoryManagement::create_variable(const std::string& variable_name, const std::string& pointer_value) {
     // This function creates a variable and assigns it to the map. This can be accessed later.
 
-    MemoryManagement& instance = get_instance();
+    MemoryManagement* instance = get_instance();
     std::string value_to_insert = pointer_value;
-    instance.m_pointer_map_data[variable_name] = std::shared_ptr<std::string>(new std::string(value_to_insert));
+    instance->m_pointer_map_data[variable_name] = std::shared_ptr<std::string>(new std::string(value_to_insert));
 }
 
 void MemoryManagement::modify_variable(const std::string& variable_name, const std::string& new_value) {
     //This function will change the value stored in the unique pointer in  the singleton map
+    // Find the variable if it exists and then modify the data.
+    auto iterator = get_instance()->m_pointer_map_data.find(variable_name.c_str());
+
+    if (iterator != get_instance()->m_pointer_map_data.end()) {
+        *get_instance()->m_pointer_map_data[variable_name.c_str()] = new_value.c_str();
+    }else{
+        std::string output = "MM_VAR_FIND_ISSUE: Variable \'"+variable_name+"\' not found";
+        Serial.println(output.c_str());
+    }
 }
 
 
@@ -94,8 +107,18 @@ int MemoryManagement::to_int(std::string& input) {
 std::string MemoryManagement::get_value(const std::string& variable_name) {
     // This function will retrieve the pointer necessary by using the variable name, but should the variable not exist
     // it will return the empty string
-    // MemoryManagement& instance = get_instance();
-    auto pointer_to_return = MemoryManagement::get_instance().m_pointer_map_data.at(variable_name);
+    // MemoryManagement* instance = get_instance();
+    std::shared_ptr<std::string> pointer_to_return;
+    // Find the variable if it exists and then return the data.
+    auto iterator = get_instance()->m_pointer_map_data.find(variable_name.c_str());
+
+    if (iterator != get_instance()->m_pointer_map_data.end()) {
+        pointer_to_return = get_instance()->m_pointer_map_data.at(variable_name);
+    }else{
+        pointer_to_return = std::make_shared<std::string>();
+        std::string output = "MM_VAR_FIND_ISSUE: Variable \'"+variable_name+"\' not found";
+        Serial.println(output.c_str());
+    }
 
     return *pointer_to_return;
 }

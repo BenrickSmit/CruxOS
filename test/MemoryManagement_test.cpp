@@ -63,25 +63,27 @@ TEST (MemoryManagement_Test, test_to_int_function__no_input) {
 
 // Memory Management Class
 TEST (MemoryManagement_Test, test_memory_management_class_variable_creation) {
+    MemoryManagement *mm = mm->get_instance();
     int original_count = MemoryManagement::count_variables();
     std::string input = "10";
     MemoryManagement::create_variable("Test_Variable", input);
     int after_count = MemoryManagement::count_variables();
     
-    bool is_valid = original_count+1 == after_count;
+    bool is_valid = (original_count+1 == after_count);
     MemoryManagement::delete_variable("Test_Variable");
 
     ASSERT_TRUE(is_valid);
 }
 
 TEST (MemoryManagement_Test, test_memory_management_class_variable_deletion) {
+    MemoryManagement *mm = mm->get_instance();
     std::string input = "10";
     MemoryManagement::create_variable("Test_Variable", input);
     int original_count = MemoryManagement::count_variables();
-    MemoryManagement::delete_variable("Test_variable");
+    MemoryManagement::delete_variable("Test_Variable");
     int new_count = MemoryManagement::count_variables();
 
-    bool is_valid = (original_count-1) == new_count;
+    bool is_valid = ((original_count-1) == new_count);
 
     ASSERT_TRUE(is_valid);
 }
