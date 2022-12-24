@@ -17,8 +17,9 @@
 class ClockSync
 {
 public:
-    /// @brief 
-    /// @return 
+    /// @brief This function returns the static instance of the singleton class ClockSync
+    ///        to ensure the variables stay until the end of the program's life.
+    /// @return an instance of this class
     static ClockSync* get_instance();
     /// @brief This function will update the stored values to the ones outlined in the variables
     /// @param hours This is the new hours value to use
@@ -45,7 +46,7 @@ private:
     int m_hour;
     int m_min;
     std::string m_time_string;
-    RtcDS3234 m_rtc;
+    //RtcDS3234 m_rtc;
 };
 
 #endif

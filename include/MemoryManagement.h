@@ -59,6 +59,10 @@ public:
     /// @return This is the created integer value from the input string.
     static int to_int(std::string& input);
 
+    static void create_nonvolatile_variable(std::string& variable_name, std::string value = "");
+    static std::string get_nonvolatile_varible(std::string& variable_name);
+    static void modify_nonvolatile_variable(std::string& variable_name, std::string new_value = "");
+
 protected:
     /// @brief This function converts the input string into a lowercase version for case insensitive matching
     /// @param input This is the string to convert to lowercase
