@@ -58,6 +58,10 @@ public:
     /// @param input This is a string that should preferably not have any whitespace and only a single integer.
     /// @return This is the created integer value from the input string.
     static int to_int(std::string& input);
+    /// @brief This function takes a string and converts it to an long long for use in the system
+    /// @param input This is a string that should preferably not have any whitespace and only a single long long.
+    /// @return This is the created long value from the input string.
+    static long long to_long(std::string& input);
 
     static void create_nonvolatile_variable(std::string& variable_name, std::string value = "");
     static std::string get_nonvolatile_varible(std::string& variable_name);

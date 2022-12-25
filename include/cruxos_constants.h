@@ -21,6 +21,7 @@ const u_int8_t BUILTIN_BTN3_PIN = 16;
 // Basic Properties
 const u_int16_t TIME_UPDATE_COUNTER = 10;                // 10 seconds
 const u_int16_t WIFI_CONN_COUNTER = 30000;               // 30 minutes
+const u_int16_t ARDUINO_DELAY = 1000;
 
 // Variables to Create at Runtime
 const std::string CN_TIME_VAR = "CURRENT_TIME";
@@ -38,6 +39,7 @@ const std::string CN_BLUETOOTH_DATA_VAR = "BLUETOOTH_DATA_RECEIVED";
 const std::string CN_BLUETOOTH_CONNECTION_VAR = "BT_STATUS";
 const std::string CN_WIFI_USE_TIMER = "WIFI_USE_TIMER";
 const std::string CN_BLUETOOTH_USE_TIMER = "BT_USE_TIMER";
+const std::string CN_MILLIS_SINCE_START = "MS_SINCE_BOOT";
 const std::string CN_ = "";
 
 #endif //CRUXOS_CONSTANTS_H

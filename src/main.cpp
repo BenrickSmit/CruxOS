@@ -6,6 +6,7 @@
 #include <cruxos_constants.h>
 #include <SystemInfo.h>
 #include <MemoryManagement.h>
+#include <ClockSynch.h>
 
 SystemInfo info;
 
@@ -16,6 +17,7 @@ void setup() {
 
   // Memory Manager Instantiation.
   MemoryManagement *mm = mm->get_instance();
+  ClockSync *cs = cs->get_instance();
   MemoryManagement::create_variable(CN_TIME_VAR, "24:00");
   MemoryManagement::create_variable(CN_WEATHER_VAR, "Cloudy");
   MemoryManagement::create_variable(CN_WEATHER_TEMP_CURR_VAR, "77");
@@ -23,6 +25,7 @@ void setup() {
   MemoryManagement::create_variable(CN_BLUETOOTH_CONNECTION_VAR, "Not-Connected");
   MemoryManagement::create_variable(CN_SSID_NAME_VAR, "Unknown");
   MemoryManagement::create_variable(CN_SSID_PASSWORD_VAR, "Unknown");
+  MemoryManagement::create_variable(CN_MILLIS_SINCE_START, ClockSync::get_millis()); // Should be nonvolatile later
 }
 
 void counter() {

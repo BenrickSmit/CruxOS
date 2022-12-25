@@ -113,6 +113,28 @@ int MemoryManagement::to_int(std::string& input) {
     return int_to_return;
 }
 
+long long MemoryManagement::to_long(std::string &input)
+{
+    // This function will take the string and convert it to an integer to return
+
+    // Shouldn't find spaces for safety purposes. But continue in any case.
+    //assert(!has_whitespace(input));
+
+    std::istringstream ss(clean_string(input));
+    std::string long_string;
+    float long_to_return;
+    ss >> long_string;
+    if(!long_string.empty()){
+        long_to_return = std::stoi(long_string);
+    } else if(has_alpha(input)){
+        long_to_return = std::numeric_limits<long long>::min();
+    } else {
+        // If it is empty just set it to zero
+        long_to_return = 0;
+    }
+
+    return long_to_return;
+}
 
 std::string MemoryManagement::get_value(const std::string& variable_name) {
     // This function will retrieve the pointer necessary by using the variable name, but should the variable not exist
