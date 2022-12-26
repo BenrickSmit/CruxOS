@@ -17,11 +17,17 @@ const u_int32_t BAUD_RATE = 9600;//9600;//9600;921600;
 const u_int8_t BUILTIN_LED_PIN = 17;
 const u_int8_t BUILTIN_BTN2_PIN = 18;
 const u_int8_t BUILTIN_BTN3_PIN = 16;
+const u_int8_t BUILTIN_BAT_PIN = 25;
 
 // Basic Properties
 const u_int16_t TIME_UPDATE_COUNTER = 10;                // 10 seconds
-const u_int16_t WIFI_CONN_COUNTER = 30000;               // 30 minutes
+const u_int16_t WIFI_CONN_COUNTER = 30*1000;               // 30 minutes
 const u_int16_t ARDUINO_DELAY = 1000;
+const u_int8_t BATTERY_CHARGING = 2;
+const u_int8_t BATTERY_DRAINING = 1;
+const u_int8_t BATTERY_FULL = 0;
+const u_int8_t BATTERY_NOT_SET = -1;
+const u_int16_t BATTERY_UPDATE_TIMER = 10*1000;          // Check every 10 second
 
 // Variables to Create at Runtime
 const std::string CN_TIME_VAR = "CURRENT_TIME";
@@ -40,6 +46,9 @@ const std::string CN_BLUETOOTH_CONNECTION_VAR = "BT_STATUS";
 const std::string CN_WIFI_USE_TIMER = "WIFI_USE_TIMER";
 const std::string CN_BLUETOOTH_USE_TIMER = "BT_USE_TIMER";
 const std::string CN_MILLIS_SINCE_START = "MS_SINCE_BOOT";
+const std::string CN_OS_NAME = "OPERATING_SYSTEM_NAME";
+const std::string CN_OS_VER = "OPERATING_SYSTEM_VER";
+const std::string CN_IP_ADDR = "NW_IP_ADDR";
 const std::string CN_ = "";
 
 #endif //CRUXOS_CONSTANTS_H

@@ -80,6 +80,13 @@ auto SystemInfo::get_max_allocated_pseudo_sram() -> u_int16_t {
     return ESP.getMaxAllocPsram();
 }
 
+auto SystemInfo::get_battery_perc() -> u_int16_t
+{
+    u_int16_t battery_voltage = 1;
+    
+    return u_int16_t();
+}
+
 void SystemInfo::serial_print() {
     std::string output_string = "";
     output_string = output_string + (("\n******************** \n"));

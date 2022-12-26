@@ -1,0 +1,25 @@
+# Based on the Google style with some modifications:
+# https://raw.githubusercontent.com/google/styleguide/gh-pages/cppguide.html
+
+# OpenCV-specific modifications:
+# - Align 'case' with 'switch' instead of aligning with the block.
+
+---
+Language:        Cpp
+BasedOnStyle:  Google
+IndentCaseLabels: false
+IndentWidth:     4
+AccessModifierOffset: -2
+UseTab:         Never
+BreakBeforeBraces: Linux
+AllowShortIfStatementsOnASingleLine: false
+AllowShortLoopsOnASingleLine: false
+AllowShortFunctionsOnASingleLine: None
+ColumnLimit:     120
+PointerAlignment: Left
+AllowAllParametersOfDeclarationOnNextLine: true
+AllowShortBlocksOnASingleLine: false
+AllowShortLabelsOnASingleLine: false
+AllowShortFunctionsOnASingleLine: false
+AllowShortIfStatementsOnASingleLine: false
+AllowShortLoopsOnASingleLine: false

@@ -10,6 +10,11 @@ MemoryManagement* MemoryManagement::get_instance() {
     return m_instance;
 }
 
+void MemoryManagement::destroy_instance() {
+    delete m_instance;
+    m_instance = nullptr;
+}
+
 void MemoryManagement::delete_variable(const std::string& variable_name) {
     // Deletes the variable from the map
     MemoryManagement* instance = get_instance();

@@ -1,6 +1,6 @@
 /**
  * \author Benrick Smit
- * \date Updated 21/12/2022
+ * \date Updated 2022/12/27
  * \brief The Memory Management Class takes care of the creation, deletion, and manipulation of variables for CruxOS
  * 
 */
@@ -28,7 +28,9 @@ public:
     ///        to ensure the variables stay until the end of the program's life.
     /// @return an instance of this class
     static MemoryManagement* get_instance();
-    
+    /// @brief This function is responsible for the deletion of the instance of Memory Management.
+    static void destroy_instance();
+
     /// @brief This function is responsible for the creation of the variables that can be used later
     /// @param variable_name This is the unique name you would like to give the variable.
     /// @param pointer_value This is the value of the variable you'd like to give in string format

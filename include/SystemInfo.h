@@ -1,6 +1,6 @@
 /**
  * \author Benrick Smit
- * \date Updated 21/12/2022
+ * \date Updated 2022/12/27
  * \brief The SystemInfo class provides the system information for the OS and Hardware components installed.
  * 
 */
@@ -44,12 +44,14 @@ public:
     auto get_pseudo_sram_size() -> u_int16_t;
     auto get_min_free_pseudo_sram() -> u_int16_t;
     auto get_max_allocated_pseudo_sram() -> u_int16_t;
+    auto get_battery_perc() -> u_int16_t;
 
     // Other
     void serial_print();
 
 protected:
     std::string to_string(const char *input_data);
+    
 
 private:
 
