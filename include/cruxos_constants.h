@@ -17,7 +17,16 @@ const u_int32_t BAUD_RATE = 9600;//9600;//9600;921600;
 const u_int8_t BUILTIN_LED_PIN = 17;
 const u_int8_t BUILTIN_BTN2_PIN = 18;
 const u_int8_t BUILTIN_BTN3_PIN = 16;
-const u_int8_t BUILTIN_BAT_PIN = 25;
+const u_int8_t BUILTIN_BATTERY_PIN = 25;
+
+// Power Properties
+const u_int32_t POWER_TIMER_NORMAL = 10 * 1000;                    // 10 seconds;
+const u_int32_t POWER_TIMER_HIBERNATE = 5 * 1000000;                 // 5 seconds;
+const u_int32_t POWER_TIMER_LOW = 5 * 1000;                        // 5 seconds;
+
+// Peripheral Properties
+enum DEVICE_ORIENTATION {DEVICE_FACE_UP = 0, DEVICE_IN_MOTION, DEVICE_STATIONARY, DEVICE_TILTED, DEVICE_ERROR = -1};
+const u_int16_t PERIPHERAL_ORIENTATION_TIMER = 1000;
 
 // Basic Properties
 const u_int16_t TIME_UPDATE_COUNTER = 10;                // 10 seconds

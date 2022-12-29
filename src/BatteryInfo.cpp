@@ -59,7 +59,8 @@ void BatteryInfo::update_battery_info(void* arg){
     
     // Get the necessary Battery Pin
     if (BatteryInfo::get_pin() == -1){
-        BatteryInfo::set_battery_pin(BatteryInfo::get_battery_pin());
+        //BatteryInfo::set_battery_pin(BatteryInfo::get_battery_pin());
+        BatteryInfo::set_battery_pin(BUILTIN_BATTERY_PIN);
     }
 
     // Get the voltage

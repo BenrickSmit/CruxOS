@@ -9,6 +9,9 @@
 #include <ClockSync.h>
 #include <BatteryInfo.h>
 
+#include <RTClib.h>
+RTC_DS3231 rtc;
+
 SystemInfo info;
 
 void setup() {
@@ -32,8 +35,7 @@ void setup() {
   MemoryManagement::create_variable(CN_OS_NAME, "CameliaOS"); // should be nonvolatile later
   MemoryManagement::create_variable(CN_OS_VER, "1.0.1"); // should be nonvolatile later
 
-  // This function has to loop
-  BatteryInfo::battery_loop();
+  
 }
 
 void counter() {
@@ -53,12 +55,16 @@ void loop() {
   Serial.print("\nTime: ");
   Serial.println(ClockSync::get_rtc_time().c_str());
   ClockSync::time_update_loop();
-  std::string battery = std::to_string(analogRead(BUILTIN_BAT_PIN)*3.3/4095.00);
-  Serial.println(battery.c_str());
-
 
   BatteryInfo *bi = bi->get_instance();
+  Serial.print("\n%: ");
   Serial.println(std::to_string(BatteryInfo::get_battery_percentage()).c_str());
+  Serial.print("\nCap: ");
+  Serial.println(std::to_string(BatteryInfo::get_battery_capacity()).c_str());
+  Serial.print("\nV: ");
+  Serial.println(std::to_string(BatteryInfo::get_battery_voltage()).c_str());
+  // This function has to loop
+  BatteryInfo::battery_loop();
 }
 
 
