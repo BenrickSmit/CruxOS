@@ -24,6 +24,7 @@ void setup() {
   MemoryManagement *mm = mm->get_instance();
   ClockSync *cs = cs->get_instance();
   BatteryInfo *bi = bi->get_instance();
+  PeripheralDevice *pd = pd->get_instance();
   MemoryManagement::create_variable(CN_TIME_VAR, "24:00");
   MemoryManagement::create_variable(CN_WEATHER_VAR, "Cloudy");
   MemoryManagement::create_variable(CN_WEATHER_TEMP_CURR_VAR, "77");
@@ -66,6 +67,7 @@ void loop() {
   Serial.println(std::to_string(BatteryInfo::get_battery_voltage()).c_str());
   // This function has to loop
   BatteryInfo::battery_loop();
+  PeripheralDevice::get_device_orientation();
 }
 
 

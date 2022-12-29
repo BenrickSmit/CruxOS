@@ -19,7 +19,7 @@ DEVICE_ORIENTATION PeripheralDevice::get_device_orientation(){
 
 void PeripheralDevice::start_peripherals(){
     Serial.begin(BAUD_RATE);
-    if (! bma280.begin(0x77, &Wire)) {
+    if (! bma280.begin(0x76, &Wire)) {
         Serial.println("Could not find a valid BME280 sensor, check wiring!");
         while (1);
     }

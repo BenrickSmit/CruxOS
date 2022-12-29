@@ -15,9 +15,17 @@ const u_int32_t BAUD_RATE = 9600;//9600;//9600;921600;
 
 // Basic Board Properties
 const u_int8_t BUILTIN_LED_PIN = 17;
-const u_int8_t BUILTIN_BTN2_PIN = 18;
-const u_int8_t BUILTIN_BTN3_PIN = 16;
+const u_int8_t BUILTIN_BTN1_PIN = 0;
+const u_int8_t BUILTIN_BTN2_PIN = 10;
+const u_int8_t BUILTIN_BTN3_PIN = 13;
 const u_int8_t BUILTIN_BATTERY_PIN = 25;
+const u_int8_t BUILTIN_TFT_CS = 5;
+const u_int8_t BUILTIN_TFT_DC = 12;
+const u_int8_t BUILTIN_TFT_RST = 33;
+const u_int8_t BUILTIN_TFT_SCK = 18;
+const u_int8_t BUILTIN_TFT_MOSI = 23;
+const u_int8_t BUILTIN_TFT_MISO = -1; // no data coming back
+const u_int8_t BUILTIN_TFT_LED = 9;
 
 // Power Properties
 const u_int32_t POWER_TIMER_NORMAL = 10 * 1000;                    // 10 seconds;
