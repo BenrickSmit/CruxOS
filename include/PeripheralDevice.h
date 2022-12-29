@@ -11,6 +11,9 @@
 
 #include <Arduino.h>
 #include <Wire.h>
+#include <SPI.h>
+#include <Adafruit_Sensor.h>
+#include <Adafruit_BME280.h>
 #include <BMA400.h>
 #include <QMC5883LCompass.h>
 
@@ -42,6 +45,7 @@ private:
     static PeripheralDevice* m_peripheral_device_instance;
     QMC5883LCompass qmc5883l;
     BMA400 bma400;
+    Adafruit_BME280 bma280;
 };
 
 #endif

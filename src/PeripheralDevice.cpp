@@ -18,9 +18,15 @@ DEVICE_ORIENTATION PeripheralDevice::get_device_orientation(){
 }
 
 void PeripheralDevice::start_peripherals(){
-    bma400.begin();
-    qmc5883l.begin();
-    bma400.
+    Serial.begin(BAUD_RATE);
+    if (! bma280.begin(0x77, &Wire)) {
+        Serial.println("Could not find a valid BME280 sensor, check wiring!");
+        while (1);
+    }
+
+    qmc5883l.init();
+    qmc5883l.setSmoothing(10, true);
+    Serial.println("Peripheral Devices Finished Initialising");
 }
 
 PeripheralDevice::PeripheralDevice(){

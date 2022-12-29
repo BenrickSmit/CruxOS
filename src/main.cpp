@@ -6,6 +6,7 @@
 #include <cruxos_constants.h>
 #include <SystemInfo.h>
 #include <MemoryManagement.h>
+#include <PeripheralDevice.h>
 #include <ClockSync.h>
 #include <BatteryInfo.h>
 
