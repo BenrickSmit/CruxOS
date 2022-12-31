@@ -46,8 +46,8 @@ void PowerManagement::power_assignment(){
 DEVICE_ORIENTATION PowerManagement::get_orientation(){
 
         // Create an instance of the Peripheral Devices
-        PeripheralDevice* pd = pd->get_instance();
-        return PeripheralDevice::get_device_orientation();
+        
+        return DEVICE_ORIENTATION(DEVICE_FACE_UP);
 }
 
 PowerManagement::PowerManagement()

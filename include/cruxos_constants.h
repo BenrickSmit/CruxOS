@@ -26,6 +26,18 @@ const u_int8_t BUILTIN_TFT_SCK = 18;
 const u_int8_t BUILTIN_TFT_MOSI = 23;
 const u_int8_t BUILTIN_TFT_MISO = -1; // no data coming back
 const u_int8_t BUILTIN_TFT_LED = 9;
+const u_int8_t BUILTIN_GPS_RX = 14;
+const u_int8_t BUILTIN_GPS_TX = 27;
+const u_int8_t BUILTIN_GPS_FON = 26;
+const u_int8_t BUILTIN_GPS_3D_FIX = 36;;
+const u_int8_t BUILTIN_GPS_GEO_FENCE = 39;
+const u_int8_t BUILTIN_RX1 = 27;
+const u_int8_t BUILTIN_TX1 = 14;
+const u_int8_t BUILTIN_ACCEL_INT1 = 34;
+const u_int8_t BUILTIN_ACCEL_INT2 = 35;
+const u_int8_t BUILTIN_ACCEL_INPUT = 0x01;
+const u_int8_t BUILTIN_ACCEL_FAILLING = 0x02;
+const u_int8_t BUILTIN_ACCEL_BME280_PIN = 118;
 
 // Power Properties
 const u_int32_t POWER_TIMER_NORMAL = 10 * 1000;                    // 10 seconds;
@@ -45,6 +57,8 @@ const u_int8_t BATTERY_DRAINING = 1;
 const u_int8_t BATTERY_FULL = 0;
 const u_int8_t BATTERY_NOT_SET = -1;
 const u_int16_t BATTERY_UPDATE_TIMER = 10*1000;          // Check every 10 second
+constexpr float BUILTIN_GRAVITY_ACCELERATION = 1.0;         // roughly 9.81 m/s^2;
+constexpr float BUILTIN_EPSILON = 0.02;
 
 // Variables to Create at Runtime
 const std::string CN_TIME_VAR = "CURRENT_TIME";
@@ -66,6 +80,7 @@ const std::string CN_MILLIS_SINCE_START = "MS_SINCE_BOOT";
 const std::string CN_OS_NAME = "OPERATING_SYSTEM_NAME";
 const std::string CN_OS_VER = "OPERATING_SYSTEM_VER";
 const std::string CN_IP_ADDR = "NW_IP_ADDR";
+const std::string CN_BUILTIN_ACCEL_PIN = "ACCELEROMETER_PIN_NUMBER";
 const std::string CN_ = "";
 
 #endif //CRUXOS_CONSTANTS_H

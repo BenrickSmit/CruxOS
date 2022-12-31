@@ -9,6 +9,10 @@
 #ifndef PERIPHERALDEVICE_H
 #define PERIPHERALDEVICE_H
 
+#include <cmath>
+#include <string>
+#include <sstream>
+
 #include <Arduino.h>
 #include <Wire.h>
 #include <SPI.h>
@@ -19,33 +23,39 @@
 
 #include <cruxos_constants.h>
 
-class PeripheralDevice{
+class PeripheralDevice {
 public:
-    /// @brief This function creates an instance of the class if it doesn't exist or returns the instance if it has
-    ///         already been created once
-    /// @return This is the instance that has to be returned
-    PeripheralDevice* get_instance();
-    /// @brief This function deletes the current instance of the device
-    void delete_instance();
+    static PeripheralDevice* get_instance();
 
-    /// @brief This function will take into account accelerometer data and determine the orientation of the device
-    /// @return This is a value of DEVICE_FACE_UP, DEVICE_IN_MOTION, DEVICE_STATIONARY, DEVICE_TILTED, or DEVICE_ERROR
-    static DEVICE_ORIENTATION get_device_orientation();
+    void init_compass();
+    void get_compass_coordinates(float& x, float& y, float& z);
+    std::string compass_to_string() const;
+
+    void init_accelerometer();
+    void get_accelerometer_coordinates(float& x, float& y, float& z) const;
+    std::string accelerometer_to_string() const;
+    void get_orientation() const;
 
 protected:
-    /// @brief This function starts the required components
-    void start_peripherals();
+    bool float_comparison(const double &magnitude, const double &gravity, const double &epsilon = 0.1) const;
+    bool tilted_comparison(const double &magnitude, const double &gravity, const double &epsilon = 0.1) const;
+    bool motion_comparison(const double &magnitude, const double &gravity, const double &epsilon = 0.1) const;
+
+    double round_doubles(const double& input) const;
 
 private:
-    PeripheralDevice();                                                         // Prevents individual instances
-    ~PeripheralDevice();                                                        // Prevents calling the dtor
-    PeripheralDevice(const PeripheralDevice&) = delete;                         // delete the copy ctor
-    PeripheralDevice* operator=(const PeripheralDevice&) = delete;              // Delete the assignment operator
+    PeripheralDevice();
+    PeripheralDevice(const PeripheralDevice&) = delete;
+    PeripheralDevice& operator=(const PeripheralDevice&) = delete;
 
-    static PeripheralDevice* m_peripheral_device_instance;
-    QMC5883LCompass qmc5883l;
-    BMA400 bma400;
-    Adafruit_BME280 bma280;
+    QMC5883LCompass m_compass;
+    BMA400 m_accelerometer;
+    static PeripheralDevice* m_instance;
+
+    mutable float m_accelerometer_x;
+    mutable float m_accelerometer_y;
+    mutable float m_accelerometer_z;
 };
+
 
 #endif

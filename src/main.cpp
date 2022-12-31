@@ -2,6 +2,8 @@
 
 #include <Arduino.h>
 #include <Wire.h>
+#include "esp_task_wdt.h"
+
 
 #include <cruxos_constants.h>
 #include <SystemInfo.h>
@@ -10,10 +12,14 @@
 #include <ClockSync.h>
 #include <BatteryInfo.h>
 
+#include <QMC5883LCompass.h>
+
 #include <RTClib.h>
 RTC_DS3231 rtc;
 
 SystemInfo info;
+
+QMC5883LCompass compass;
 
 void setup() {
   // put your setup code here, to run once:
@@ -24,7 +30,8 @@ void setup() {
   MemoryManagement *mm = mm->get_instance();
   ClockSync *cs = cs->get_instance();
   BatteryInfo *bi = bi->get_instance();
-  PeripheralDevice *pd = pd->get_instance();
+  PeripheralDevice::get_instance()->init_compass();
+  PeripheralDevice::get_instance()->init_accelerometer();
   MemoryManagement::create_variable(CN_TIME_VAR, "24:00");
   MemoryManagement::create_variable(CN_WEATHER_VAR, "Cloudy");
   MemoryManagement::create_variable(CN_WEATHER_TEMP_CURR_VAR, "77");
@@ -37,7 +44,12 @@ void setup() {
   MemoryManagement::create_variable(CN_OS_NAME, "CameliaOS"); // should be nonvolatile later
   MemoryManagement::create_variable(CN_OS_VER, "1.0.1"); // should be nonvolatile later
 
-  
+  compass.init();
+  compass.setSmoothing(10, true);
+  //compass.read();
+
+  rtc.begin();
+  //rtc.adjust(DateTime(2020, 1, 1, 15, 30, 0));
 }
 
 void counter() {
@@ -52,22 +64,35 @@ void counter() {
 void loop() {
   //This is the loopable code
   delay(1000);
-  info.serial_print();
+  //info.serial_print();
 
   Serial.print("\nTime: ");
   Serial.println(ClockSync::get_rtc_time().c_str());
   ClockSync::time_update_loop();
 
+  /*
   BatteryInfo *bi = bi->get_instance();
-  Serial.print("\n%: ");
+  Serial.print("%: ");
   Serial.println(std::to_string(BatteryInfo::get_battery_percentage()).c_str());
-  Serial.print("\nCap: ");
+  Serial.print("Cap: ");
   Serial.println(std::to_string(BatteryInfo::get_battery_capacity()).c_str());
-  Serial.print("\nV: ");
+  Serial.print("V: ");
   Serial.println(std::to_string(BatteryInfo::get_battery_voltage()).c_str());
+  */
   // This function has to loop
   BatteryInfo::battery_loop();
-  PeripheralDevice::get_device_orientation();
+
+  //PeripheralDevice::get_device_orientation();
+  //PeripheralDevice::get_compass();
+  
+  //printf("Compass: [%d,%d,%d], {%d}\n", compass.getX(), compass.getY(), compass.getZ(), compass.getAzimuth());
+  //compass.read();
+  printf("Compass Data:\n%s\n", PeripheralDevice::get_instance()->compass_to_string().c_str());
+  DateTime now = DateTime(rtc.now());
+  printf("RTC: %d:%d:%d\n", now.hour(),now.minute(),now.second());
+  printf("BMA400: %s\n", PeripheralDevice::get_instance()->accelerometer_to_string().c_str());
+  PeripheralDevice::get_instance()->get_orientation();
+  
 }
 
 

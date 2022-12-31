@@ -1,38 +1,121 @@
 #include "PeripheralDevice.h"
 
-PeripheralDevice* PeripheralDevice::m_peripheral_device_instance = nullptr;
-PeripheralDevice* PeripheralDevice::get_instance(){
-    if (!m_peripheral_device_instance){
-        m_peripheral_device_instance = new PeripheralDevice();
+PeripheralDevice* PeripheralDevice::m_instance = nullptr;
+
+PeripheralDevice* PeripheralDevice::get_instance() {
+  if(!m_instance){
+    m_instance = new PeripheralDevice();
+  }
+  return m_instance;
+}
+
+PeripheralDevice::PeripheralDevice() {}
+
+void PeripheralDevice::init_compass() {
+  m_compass.init();
+  
+}
+
+void PeripheralDevice::get_compass_coordinates(float& x, float& y, float& z) {
+  m_compass.read();
+  x = m_compass.getX();
+  y = m_compass.getY();
+  z = m_compass.getZ();
+}
+
+std::string PeripheralDevice::compass_to_string() const {
+    PeripheralDevice *pd = PeripheralDevice::get_instance();
+    std::stringstream ss;
+    ss << "x: " << pd->m_compass.getX() << ", y: " << pd->m_compass.getY() << ", z: " << pd->m_compass.getY();
+    return ss.str();
+}
+
+void PeripheralDevice::init_accelerometer(){
+    Wire.begin(GPIO_NUM_21, GPIO_NUM_22, 400000);
+    if (!m_accelerometer.Initialize()){
+        printf("Could not initialise the BMA400 sensor");
+        while(1);
+    } else{
+        printf("Successfully initialised the BMA400 sensor");
+        m_accelerometer.Setup(
+        BMA400::power_mode_t::NORMAL_LOW_NOISE,
+        BMA400::output_data_rate_t::Filter2_100Hz,
+        BMA400::acceleation_range_t::RANGE_8G);
     }
-    return nullptr;
 }
 
-void PeripheralDevice::delete_instance(){
-    delete m_peripheral_device_instance;
-    m_peripheral_device_instance = nullptr;
+void PeripheralDevice::get_accelerometer_coordinates(float& x, float& y, float& z) const{
+    PeripheralDevice* pd = PeripheralDevice::get_instance();
+    float acceleration[3] = {0};
+    pd->m_accelerometer.ReadAcceleration(acceleration);
+    m_accelerometer_x = acceleration[0];
+    m_accelerometer_y = acceleration[1];
+    m_accelerometer_z = acceleration[2];
+
+    x = m_accelerometer_x;
+    y = m_accelerometer_y;
+    z = m_accelerometer_z;
 }
 
-DEVICE_ORIENTATION PeripheralDevice::get_device_orientation(){
-    return DEVICE_ORIENTATION(0);
+std::string PeripheralDevice::accelerometer_to_string() const{
+    PeripheralDevice *pd = PeripheralDevice::get_instance();
+    std::stringstream ss;
+    float acceleration[3] = {0};
+    pd->m_accelerometer.ReadAcceleration(acceleration);
+    ss << "x: " << acceleration[0] << ", y: " << acceleration[1] << ", z: " << acceleration[2] << " :: S: " << pd->m_accelerometer.GetTotalSteps();
+    return ss.str();
 }
 
-void PeripheralDevice::start_peripherals(){
-    Serial.begin(BAUD_RATE);
-    if (! bma280.begin(0x76, &Wire)) {
-        Serial.println("Could not find a valid BME280 sensor, check wiring!");
-        while (1);
+void PeripheralDevice::get_orientation() const{
+    // Get the accelerometer coordinates
+    float x, y, z;
+    get_accelerometer_coordinates(x, y, z);
+
+    // Calculate the magnitude of the accelerometer coordinates
+    double magnitude = round_doubles(std::sqrt(round_doubles(x * x) + round_doubles(y * y) + round_doubles(z * z)));
+
+    // Check if the magnitude is close to 1g (9.8 m/s^2)
+    if (float_comparison(magnitude, BUILTIN_GRAVITY_ACCELERATION, BUILTIN_EPSILON)) {
+        // The device is either face-up or face-down
+        printf("->face-up or face-down\n");
+    } else if (tilted_comparison(magnitude, BUILTIN_GRAVITY_ACCELERATION, BUILTIN_EPSILON)) {
+        // The device is tilted
+        printf("->tilted\n");
+    } else if (motion_comparison(magnitude, BUILTIN_GRAVITY_ACCELERATION, BUILTIN_EPSILON)) {
+        // The device is in motion
+        printf("->in motion\n");
+    } else {
+        // The device is stationary
+        printf("->stationary\n");
     }
-
-    qmc5883l.init();
-    qmc5883l.setSmoothing(10, true);
-    Serial.println("Peripheral Devices Finished Initialising");
+    printf("--> M: %f, G: %f, E: %f\n", magnitude, 9.8, 0.1);
+    
 }
 
-PeripheralDevice::PeripheralDevice(){
-    start_peripherals();
+bool PeripheralDevice::float_comparison(const double& magnitude,const  double& gravity,const  double& epsilon) const{
+    bool to_return = false;
+    if(std::abs(magnitude - gravity) < (epsilon)){
+        to_return = true;
+    }
+    return to_return;
 }
 
-PeripheralDevice::~PeripheralDevice(){
-    // Do nothing
+bool PeripheralDevice::tilted_comparison(const double& magnitude,const  double& gravity,const  double& epsilon) const{
+    bool to_return = false;
+    if(std::abs(gravity + epsilon) < magnitude ){
+        to_return = true;
+    }
+    return to_return;
+}
+
+bool PeripheralDevice::motion_comparison(const double& magnitude,const  double& gravity,const  double& epsilon) const{
+    bool to_return = false;
+    if(std::abs(gravity - epsilon) > magnitude){
+        to_return = true;
+    }
+    return to_return;
+}
+
+double PeripheralDevice::round_doubles(const double& input) const{
+    return round(input * 10000) / 10000;
 }
