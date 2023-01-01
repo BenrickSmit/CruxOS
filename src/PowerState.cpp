@@ -83,7 +83,7 @@ bool PowerState::get_powerstate(){
     return ps->m_power_state;
 }
 
-void PowerState::set_powerstate(bool new_powerstate){
+void PowerState::set_powerstate(DEVICE_POWERSTATE new_powerstate){
     PowerState *ps = ps->get_instance();
     ps->m_power_state = new_powerstate;
 }
