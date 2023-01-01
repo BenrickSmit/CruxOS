@@ -37,11 +37,18 @@ public:
     /// @brief This function cancels all power-states and returns to new.
     static void set_power_normal();
 
+
+    static bool get_powerstate();
+    static void set_powerstate(DEVICE_POWERSTATE newPowerstate);
+
 private:
     PowerState();
     ~PowerState();
     PowerState(const PowerState&) = delete;             // Delete the copy constructor to remove duplicates
     PowerState* operator=(const PowerState&) = delete;  // Delete the assignment operator to remove duplicates
+
+
+    DEVICE_POWERSTATE m_power_state;
 
     static PowerState *m_state;
 };

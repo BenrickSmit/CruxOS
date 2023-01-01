@@ -24,13 +24,14 @@ public:
     void delete_instance();
 
     /// @brief This function will run once every few seconds and determine what kind of power management should occur
-    void power_assignment();
+    static void power_assignment();
 
 protected:
     /// @brief This function will return the orientation of the device as an enum for later use.
     /// @return This is the enum that will return DEVICE_FACE_UP, DEVICE_IN_MOTION, DEVICE_STATIONARY, DEVICE_TILTED
     ///          or DEVICE_ERROR based on the accelerometer
     DEVICE_ORIENTATION get_orientation();
+
 
 private:
     PowerManagement();
@@ -39,6 +40,8 @@ private:
     PowerManagement* operator=(const PowerManagement&) = delete;    // Delete the assignment operator to avoid duplications
 
     static PowerManagement* m_power_management;
+
+    DEVICE_ORIENTATION m_orientation;
 };
 
 #endif

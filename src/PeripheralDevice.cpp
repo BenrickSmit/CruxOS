@@ -62,11 +62,12 @@ std::string PeripheralDevice::accelerometer_to_string() const{
     std::stringstream ss;
     float acceleration[3] = {0};
     pd->m_accelerometer.ReadAcceleration(acceleration);
-    ss << "x: " << acceleration[0] << ", y: " << acceleration[1] << ", z: " << acceleration[2] << " :: S: " << pd->m_accelerometer.GetTotalSteps();
+    uint16_t steps = pd->m_accelerometer.GetTotalSteps();
+    ss << "x: " << acceleration[0] << ", y: " << acceleration[1] << ", z: " << acceleration[2] << " :: S: " << steps;
     return ss.str();
 }
 
-void PeripheralDevice::get_orientation() const{
+DEVICE_ORIENTATION PeripheralDevice::get_orientation() const{
     // Get the accelerometer coordinates
     float x, y, z;
     get_accelerometer_coordinates(x, y, z);
@@ -77,19 +78,22 @@ void PeripheralDevice::get_orientation() const{
     // Check if the magnitude is close to 1g (9.8 m/s^2)
     if (float_comparison(magnitude, BUILTIN_GRAVITY_ACCELERATION, BUILTIN_EPSILON)) {
         // The device is either face-up or face-down
-        printf("->face-up or face-down\n");
+        //printf("->face-up or face-down\n");
+        return DEVICE_FACE_UP;
     } else if (tilted_comparison(magnitude, BUILTIN_GRAVITY_ACCELERATION, BUILTIN_EPSILON)) {
         // The device is tilted
-        printf("->tilted\n");
-    } else if (motion_comparison(magnitude, BUILTIN_GRAVITY_ACCELERATION, BUILTIN_EPSILON)) {
+        //printf("->tilted\n");
+        return DEVICE_TILTED;
+    } else {//if (motion_comparison(magnitude, BUILTIN_GRAVITY_ACCELERATION, BUILTIN_EPSILON)) {
         // The device is in motion
-        printf("->in motion\n");
-    } else {
+        //printf("->in motion\n");
+        return DEVICE_IN_MOTION;
+    //} else {
         // The device is stationary
-        printf("->stationary\n");
+        //printf("->stationary\n");
     }
     printf("--> M: %f, G: %f, E: %f\n", magnitude, 9.8, 0.1);
-    
+    return (DEVICE_ORIENTATION());
 }
 
 bool PeripheralDevice::float_comparison(const double& magnitude,const  double& gravity,const  double& epsilon) const{
@@ -102,7 +106,7 @@ bool PeripheralDevice::float_comparison(const double& magnitude,const  double& g
 
 bool PeripheralDevice::tilted_comparison(const double& magnitude,const  double& gravity,const  double& epsilon) const{
     bool to_return = false;
-    if(std::abs(gravity + epsilon) < magnitude ){
+    if(std::abs(magnitude - gravity) > (epsilon*0.70)){//std::abs(gravity + epsilon-0.025) < magnitude ){
         to_return = true;
     }
     return to_return;
@@ -110,7 +114,7 @@ bool PeripheralDevice::tilted_comparison(const double& magnitude,const  double& 
 
 bool PeripheralDevice::motion_comparison(const double& magnitude,const  double& gravity,const  double& epsilon) const{
     bool to_return = false;
-    if(std::abs(gravity - epsilon) > magnitude){
+    if(std::abs(gravity - epsilon+0.01) > magnitude){
         to_return = true;
     }
     return to_return;

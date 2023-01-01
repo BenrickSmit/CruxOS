@@ -17,24 +17,36 @@ void PowerManagement::delete_instance(){
 
 void PowerManagement::power_assignment(){
     PowerState* ps = ps->get_instance();
+    PowerManagement* pm = pm->get_instance();
     Serial.begin(BAUD_RATE);
     while (true){
-            if (get_orientation() == DEVICE_FACE_UP){
+            if (pm->get_orientation() == DEVICE_FACE_UP){
                 // Set components to normal power usage since watch is in use
-                //PowerState::set_power_normal();
+                if (PowerState::get_powerstate() != DEVICE_POWERSTATE::DEVICE_POWER_NORMAL){
+                    PowerState::set_power_normal();
+                    PowerState::set_powerstate(DEVICE_POWERSTATE::DEVICE_POWER_NORMAL);
+                }
                 Serial.println("DO::FACE_UP");
-            } else if (get_orientation() == DEVICE_IN_MOTION){
+            } else if (pm->get_orientation() == DEVICE_IN_MOTION){
                 // Set components to minimal power usage since only peripherals need to work
-                //PowerState::set_power_low();
+                if (PowerState::get_powerstate() != DEVICE_POWERSTATE::DEVICE_POWER_LOW){
+                    PowerState::set_power_normal();
+                    PowerState::set_powerstate(DEVICE_POWERSTATE::DEVICE_POWER_LOW);
+                }
                 Serial.println("DO::IN_MOTION");
-            } else if (get_orientation() == DEVICE_STATIONARY){
+            } else if (pm->get_orientation() == DEVICE_TILTED){
                 // Set components to low power usage as the device isn't being used
                 // Enter sleep mode
-                //PowerState::set_power_hibernate();
-                Serial.println("DO::STATIONARY");
+                //PowerState::set_power_low();
+                if (PowerState::get_powerstate() != DEVICE_POWERSTATE::DEVICE_POWER_LOW){
+                    PowerState::set_power_normal();
+                    PowerState::set_powerstate(DEVICE_POWERSTATE::DEVICE_POWER_LOW);
+                }
+                Serial.println("DO::TILTED");
             } else{
-                // Either an error occurred or the watch is tilted and in that case just normal power for now
-                //PowerState::set_power_normal();
+                // If some kind of error has occurred, it's best to go back to normal power
+                PowerState::set_power_normal();
+                PowerState::set_powerstate(DEVICE_POWERSTATE::DEVICE_POWER_NORMAL);
                 Serial.println("DO::ERROR?");
             }
 
@@ -46,12 +58,13 @@ void PowerManagement::power_assignment(){
 DEVICE_ORIENTATION PowerManagement::get_orientation(){
 
         // Create an instance of the Peripheral Devices
+        PeripheralDevice *pd = pd->get_instance();
         
-        return DEVICE_ORIENTATION(DEVICE_FACE_UP);
+        return pd->get_orientation();
 }
 
-PowerManagement::PowerManagement()
-{
+
+PowerManagement::PowerManagement(){
         // Do nothing
 }
 

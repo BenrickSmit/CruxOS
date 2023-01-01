@@ -20,7 +20,7 @@ void PowerState::set_power_low(){
 #ifdef ESP_PLATFORM
     // What to do if it is an ESP32 module
     // Wakeup the device from a light sleep after the POWER_TIMER_LOW reaches zero
-    esp_sleep_enable_timer_wakeup(POWER_TIMER_LOW);
+    //esp_sleep_enable_timer_wakeup(POWER_TIMER_LOW);
     esp_light_sleep_start();
 
 #elif defined(ARDUINO)
@@ -36,7 +36,8 @@ void PowerState::set_power_hibernate(){
         // Wakeup the device from hibernation after the POWER_TIMER_HIBERNATE reaches 0
         esp_sleep_enable_timer_wakeup(ESP_SLEEP_WAKEUP_TIMER);
         esp_deep_sleep(POWER_TIMER_HIBERNATE);
-
+        //Make sure that normal execution can start but ensure low battery usage.
+        esp_light_sleep_start();
     #elif defined(ARDUINO)
         // What to do if it is an ARDUINO module
     #endif 
@@ -64,17 +65,27 @@ void PowerState::set_power_normal(){
         wakeup_reason = esp_sleep_get_wakeup_cause();
 
         switch(wakeup_reason){
-            case ESP_SLEEP_WAKEUP_EXT0 : Serial.println("Wakeup caused by external signal using RTC_IO"); break;
-            case ESP_SLEEP_WAKEUP_EXT1 : Serial.println("Wakeup caused by external signal using RTC_CNTL"); break;
-            case ESP_SLEEP_WAKEUP_TIMER : Serial.println("Wakeup caused by timer"); break;
-            case ESP_SLEEP_WAKEUP_TOUCHPAD : Serial.println("Wakeup caused by touchpad"); break;
-            case ESP_SLEEP_WAKEUP_ULP : Serial.println("Wakeup caused by ULP program"); break;
-            default : Serial.printf("Wakeup was not caused by deep sleep: %d\n",wakeup_reason); break;
+            case ESP_SLEEP_WAKEUP_EXT0 : Serial.println("NORMAL Power State caused by external signal using RTC_IO"); break;
+            case ESP_SLEEP_WAKEUP_EXT1 : Serial.println("NORMAL Power State caused by external signal using RTC_CNTL"); break;
+            case ESP_SLEEP_WAKEUP_TIMER : Serial.println("NORMAL Power State caused by timer"); break;
+            case ESP_SLEEP_WAKEUP_TOUCHPAD : Serial.println("NORMAL Power State caused by touchpad"); break;
+            case ESP_SLEEP_WAKEUP_ULP : Serial.println("NORMAL Power State caused by ULP program"); break;
+            default : Serial.printf("NORMAL Power State was not caused by deep sleep: %d\n",wakeup_reason); break;
         }
 
     #elif defined(ARDUINO)
         // What to do if it is an ARDUINO module
     #endif 
+}
+
+bool PowerState::get_powerstate(){
+    PowerState *ps = ps->get_instance();
+    return ps->m_power_state;
+}
+
+void PowerState::set_powerstate(bool new_powerstate){
+    PowerState *ps = ps->get_instance();
+    ps->m_power_state = new_powerstate;
 }
 
 

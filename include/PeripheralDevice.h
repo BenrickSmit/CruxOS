@@ -34,7 +34,7 @@ public:
     void init_accelerometer();
     void get_accelerometer_coordinates(float& x, float& y, float& z) const;
     std::string accelerometer_to_string() const;
-    void get_orientation() const;
+    DEVICE_ORIENTATION get_orientation() const;
 
 protected:
     bool float_comparison(const double &magnitude, const double &gravity, const double &epsilon = 0.1) const;
