@@ -41,7 +41,7 @@ const u_int8_t BUILTIN_ACCEL_BME280_PIN = 118;
 
 // Power Properties
 const u_int32_t POWER_TIMER_NORMAL = 10 * 1000;                    // 10 seconds;
-const u_int32_t POWER_TIMER_HIBERNATE = 5 * 1000000;                 // 5 seconds;
+const u_int32_t POWER_TIMER_HIBERNATE = 5 * 100;                 // 5 seconds;
 const u_int32_t POWER_TIMER_LOW = 5 * 1000;                        // 5 seconds;
 
 // Peripheral Properties

@@ -20,7 +20,7 @@ void PowerState::set_power_low(){
 #ifdef ESP_PLATFORM
     // What to do if it is an ESP32 module
     // Wakeup the device from a light sleep after the POWER_TIMER_LOW reaches zero
-    //esp_sleep_enable_timer_wakeup(POWER_TIMER_LOW);
+    esp_sleep_enable_timer_wakeup(POWER_TIMER_LOW);
     esp_light_sleep_start();
 
 #elif defined(ARDUINO)
@@ -76,16 +76,6 @@ void PowerState::set_power_normal(){
     #elif defined(ARDUINO)
         // What to do if it is an ARDUINO module
     #endif 
-}
-
-bool PowerState::get_powerstate(){
-    PowerState *ps = ps->get_instance();
-    return ps->m_power_state;
-}
-
-void PowerState::set_powerstate(DEVICE_POWERSTATE new_powerstate){
-    PowerState *ps = ps->get_instance();
-    ps->m_power_state = new_powerstate;
 }
 
 

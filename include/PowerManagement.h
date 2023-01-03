@@ -9,6 +9,10 @@
 #ifndef POWERMANAGEMENT_H
 #define POWERMANAGEMENT_H
 
+#include <Thread.h>
+#include <thread>
+#include <functional>
+
 #include <Arduino.h>
 
 #include <PowerState.h>
@@ -25,6 +29,9 @@ public:
 
     /// @brief This function will run once every few seconds and determine what kind of power management should occur
     static void power_assignment();
+    /// @brief This function will ensure that the power functions execute in a loop and will not execute them again if they
+    ///         are already running;
+    static void power_optimisation();
 
 protected:
     /// @brief This function will return the orientation of the device as an enum for later use.
@@ -32,8 +39,10 @@ protected:
     ///          or DEVICE_ERROR based on the accelerometer
     DEVICE_ORIENTATION get_orientation();
 
+    static DEVICE_POWERSTATE get_powerstate();
+    static void set_powerstate(DEVICE_POWERSTATE new_powerstate);
 
-private:
+  private:
     PowerManagement();
     ~PowerManagement();
     PowerManagement(const PowerManagement&) = delete;               // Delete the copy ctor to avoid duplications
@@ -42,6 +51,8 @@ private:
     static PowerManagement* m_power_management;
 
     DEVICE_ORIENTATION m_orientation;
+    bool m_power_assignment;
+    DEVICE_POWERSTATE m_power_state;
 };
 
 #endif
