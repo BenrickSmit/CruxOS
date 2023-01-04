@@ -56,6 +56,7 @@ void setup() {
   rtc.begin();
   //rtc.adjust(DateTime(2020, 1, 1, 15, 30, 0));
   //wifi.begin("SSID", "PASSWORD");
+
 }
 
 void counter() {

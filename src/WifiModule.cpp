@@ -14,7 +14,27 @@ WifiModule::WifiModule() {
     "nist1-lnk.binary.net",
     "nist1-ny.ustiming.org",
     "nist1-sj.ustiming.org",
-    "nist1-wa.ustiming.org"};
+    "nist1-wa.ustiming.org",
+    "time.nist.gov",
+    "time-a.nist.gov",
+    "time-b.nist.gov",
+    "time-c.nist.gov",
+    "pool.ntp.org",
+    "north-america.pool.ntp.org",
+    "europe.pool.ntp.org",
+    "asia.pool.ntp.org",
+    "oceania.pool.ntp.org",
+    "africa.pool.ntp.org",
+    "south-america.pool.ntp.org",
+    "time1.google.com",
+    "time2.google.com",
+    "time3.google.com",
+    "time4.google.com",
+    "time.apple.com",
+    "time.windows.com",
+    "time.cloudflare.com",
+    "time.certum.pl",
+    "time.euro.apple.com"};
 }
 
 WifiModule::~WifiModule(){
