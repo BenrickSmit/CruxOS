@@ -12,6 +12,7 @@
 #include <PowerManagement.h>
 #include <ClockSync.h>
 #include <BatteryInfo.h>
+#include <WifiModule.h>
 
 #include <QMC5883LCompass.h>
 
@@ -19,6 +20,7 @@
 RTC_DS3231 rtc;
 
 SystemInfo info;
+WifiModule wifi;
 
 QMC5883LCompass compass;
 
@@ -34,7 +36,7 @@ void setup() {
   PeripheralDevice::get_instance()->init_compass();
   PeripheralDevice::get_instance()->init_accelerometer();
   PowerManagement* pm = pm->get_instance();
-  PowerManagement::power_optimisation();
+  //PowerManagement::power_optimisation();
   MemoryManagement::create_variable(CN_TIME_VAR, "24:00");
   MemoryManagement::create_variable(CN_WEATHER_VAR, "Cloudy");
   MemoryManagement::create_variable(CN_WEATHER_TEMP_CURR_VAR, "77");
@@ -53,6 +55,7 @@ void setup() {
 
   rtc.begin();
   //rtc.adjust(DateTime(2020, 1, 1, 15, 30, 0));
+  //wifi.begin("SSID", "PASSWORD");
 }
 
 void counter() {
@@ -83,19 +86,19 @@ void loop() {
   Serial.println(std::to_string(BatteryInfo::get_battery_voltage()).c_str());
   */
   // This function has to loop
-  BatteryInfo::battery_loop();
+  //BatteryInfo::battery_loop();
 
   //PeripheralDevice::get_device_orientation();
   //PeripheralDevice::get_compass();
   
   //printf("Compass: [%d,%d,%d], {%d}\n", compass.getX(), compass.getY(), compass.getZ(), compass.getAzimuth());
   //compass.read();
-  printf("Compass Data:\n%s\n", PeripheralDevice::get_instance()->compass_to_string().c_str());
+  //printf("Compass Data:\n%s\n", PeripheralDevice::get_instance()->compass_to_string().c_str());
   DateTime now = DateTime(rtc.now());
   printf("RTC: %d:%d:%d\n", now.hour(),now.minute(),now.second());
   //printf("BMA400: %s\n", PeripheralDevice::get_instance()->accelerometer_to_string().c_str());
   PeripheralDevice::get_instance()->get_orientation();
-  
+  wifi.get_time();
 }
 
 

@@ -1,6 +1,6 @@
 /**
  * \author Benrick Smit
- * \date Updated 2022/12/29
+ * \date Updated 2023/01/04
  * \brief The PowerManagement class will take input from the accellerometers and determine whether to work in low-power
  *          or an alternative power form
  * 
@@ -9,7 +9,6 @@
 #ifndef POWERMANAGEMENT_H
 #define POWERMANAGEMENT_H
 
-#include <Thread.h>
 #include <thread>
 #include <functional>
 

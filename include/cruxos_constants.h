@@ -51,7 +51,7 @@ const u_int16_t PERIPHERAL_ORIENTATION_TIMER = 1000;
 
 // Basic Properties
 const u_int16_t TIME_UPDATE_COUNTER = 10;                // 10 seconds
-const u_int16_t WIFI_CONN_COUNTER = 30*1000;               // 30 minutes
+const u_int32_t WIFI_CONN_COUNTER = 4*30*1000;               // 2 hours //30 minutes
 const u_int16_t ARDUINO_DELAY = 1000;
 const u_int8_t BATTERY_CHARGING = 2;
 const u_int8_t BATTERY_DRAINING = 1;
