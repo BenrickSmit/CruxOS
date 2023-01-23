@@ -45,7 +45,7 @@ void WifiModule::begin(const char* ssid, const char* password){
     WiFi.begin(ssid, password);
     while (WiFi.status() != WL_CONNECTED) {
         delay(TIME_UPDATE_COUNTER);
-        printf(".");
+        CruxOSLog::Logging(__FUNCTION__, "Waiting For Wifi Connection.");
     }
 }
 
@@ -61,7 +61,7 @@ void WifiModule::read_time_server(){
     for (const std::string& server : m_time_servers) {
     if (m_client.connect(server.c_str(), 13)) {
         // Connection successful
-        printf("\nConnection to (%s): Successful\n", server);
+        CruxOSLog::Logging(__FUNCTION__, "Connection to "+server+": Successful");
         m_client.println("GET / HTTP/1.1");
         // Get a response from the time server but try until the response is not an empty line.
    
@@ -77,21 +77,30 @@ void WifiModule::read_time_server(){
                         tzset();
                         time_t now = mktime(&timeinfo);
                         printf("Time: %s\n",ctime(&now));
+                        CruxOSLog::Logging(__FUNCTION__, "REC Time: " + std::string(ctime(&now)));
+
+                        // Write the Time to the Time Variable as Necessary
+                        MemoryManagement::modify_variable(CN_WIFI_TIME_VAR, std::to_string(timeinfo.tm_year) +":"+ 
+                                        std::to_string(timeinfo.tm_mon) +":"+ std::to_string(timeinfo.tm_mday) +":"+ 
+                                        std::to_string(timeinfo.tm_hour) +":"+ std::to_string(timeinfo.tm_min) +":"+ 
+                                        std::to_string(timeinfo.tm_sec));
+                        CruxOSLog::Logging(__FUNCTION__, "Wrote "+std::string(ctime(&now)) + "To WiFi Time Var.");
+
                         break;
                     } else {
-                        printf("Empty Line\n");
+                        CruxOSLog::Logging(__FUNCTION__, "Empty Line Received");
                     }
-                    printf("LINE: %s\n", line);
+                    CruxOSLog::Logging(__FUNCTION__, "LINE: "+std::string(line.c_str()));
                 //}while(line == "");
             }
         
         //Close the connection
         m_client.flush();
         m_client.stop();
-        Serial.println("Connection closed");
+        CruxOSLog::Logging(__FUNCTION__, "Connection Closed.");
         break;
     } else {
-        printf("(%s): Unsuccessful.\n");
+        CruxOSLog::Logging(__FUNCTION__, "Connection to "+server+ ": Unsuccessful");
     }
 
     

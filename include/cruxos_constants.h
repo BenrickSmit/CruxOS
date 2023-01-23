@@ -11,7 +11,7 @@
 #include <Arduino.h>
 
 // Basic Data Properties
-const u_int32_t BAUD_RATE = 9600;//9600;//9600;921600;
+const u_int32_t BAUD_RATE = 921600;//9600;//14400;115200;921600;
 
 // Basic Board Properties
 const u_int8_t BUILTIN_LED_PIN = 17;
@@ -39,6 +39,12 @@ const u_int8_t BUILTIN_ACCEL_INPUT = 0x01;
 const u_int8_t BUILTIN_ACCEL_FAILLING = 0x02;
 const u_int8_t BUILTIN_ACCEL_BME280_PIN = 118;
 
+// Screen Properties
+const u_int8_t SCREEN_WIDTH = 240;
+const u_int8_t SCREEN_HEIGHT = 240;
+const u_int8_t SCREEN_WIDTH_CENTRE = SCREEN_WIDTH/2.0;
+const u_int8_t SCREEN_HEIGHT_CENTRE = SCREEN_HEIGHT/2.0;
+
 // Power Properties
 const u_int32_t POWER_TIMER_NORMAL = 10 * 1000;                    // 10 seconds;
 const u_int32_t POWER_TIMER_HIBERNATE = 5 * 100;                 // 5 seconds;
@@ -60,6 +66,7 @@ const u_int8_t BATTERY_NOT_SET = -1;
 const u_int16_t BATTERY_UPDATE_TIMER = 10*1000;          // Check every 10 second
 constexpr float BUILTIN_GRAVITY_ACCELERATION = 1.0;         // roughly 9.81 m/s^2;
 constexpr float BUILTIN_EPSILON = 0.02;
+enum LOG_LEVEL {LOG_INFO = 0, LOG_WARNING, LOG_ERROR};
 
 // Variables to Create at Runtime
 const std::string CN_TIME_VAR = "CURRENT_TIME";
@@ -76,6 +83,7 @@ const std::string CN_EST_LOCATION_VAR = "ESTIMATED_LOCATION";
 const std::string CN_BLUETOOTH_DATA_VAR = "BLUETOOTH_DATA_RECEIVED";
 const std::string CN_BLUETOOTH_CONNECTION_VAR = "BT_STATUS";
 const std::string CN_WIFI_USE_TIMER = "WIFI_USE_TIMER";
+const std::string CN_WIFI_TIME_VAR = "WIFI_CENTRAL_TIME_SERVER_VARIABLE";
 const std::string CN_BLUETOOTH_USE_TIMER = "BT_USE_TIMER";
 const std::string CN_MILLIS_SINCE_START = "MS_SINCE_BOOT";
 const std::string CN_OS_NAME = "OPERATING_SYSTEM_NAME";
@@ -83,5 +91,8 @@ const std::string CN_OS_VER = "OPERATING_SYSTEM_VER";
 const std::string CN_IP_ADDR = "NW_IP_ADDR";
 const std::string CN_BUILTIN_ACCEL_PIN = "ACCELEROMETER_PIN_NUMBER";
 const std::string CN_ = "";
+
+// Weather Properties
+enum WEATHER_CODE {CLEAR_SKY = 0, FEW_CLOUDS, SCATTERED_CLOUDS, BROKEN_CLOUDS, SHOWER_RAIN, RAIN, THUNDER, SNOW, MIST};
 
 #endif //CRUXOS_CONSTANTS_H

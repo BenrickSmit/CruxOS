@@ -33,10 +33,10 @@ std::string PeripheralDevice::compass_to_string() const {
 void PeripheralDevice::init_accelerometer(){
     Wire.begin(GPIO_NUM_21, GPIO_NUM_22, 400000);
     if (!m_accelerometer.Initialize()){
-        printf("Could not initialise the BMA400 sensor");
+        CruxOSLog::Logging(__FUNCTION__, "BMA400 Not Initialised.", LOG_ERROR);
         while(1);
     } else{
-        printf("Successfully initialised the BMA400 sensor");
+        CruxOSLog::Logging(__FUNCTION__, "BMA400 Initialised.");
         m_accelerometer.Setup(
         BMA400::power_mode_t::NORMAL_LOW_NOISE,
         BMA400::output_data_rate_t::Filter2_100Hz,
@@ -92,7 +92,7 @@ DEVICE_ORIENTATION PeripheralDevice::get_orientation() const{
         // The device is stationary
         //printf("->stationary\n");
     }
-    printf("--> M: %f, G: %f, E: %f\n", magnitude, 9.8, 0.1);
+    //printf("--> M: %f, G: %f, E: %f\n", magnitude, 9.8, 0.1);
     return (DEVICE_ORIENTATION());
 }
 

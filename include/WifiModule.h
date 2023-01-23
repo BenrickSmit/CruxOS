@@ -10,6 +10,8 @@
 #include <string>
 
 #include <cruxos_constants.h>
+#include <CruxOSLog.h>
+#include <MemoryManagement.h>
 
 class WifiModule{
 public:

@@ -2,6 +2,7 @@
 
 #include <Arduino.h>
 #include <Wire.h>
+#include <TFT_eSPI.h>
 #include "esp_task_wdt.h"
 
 
@@ -10,19 +11,26 @@
 #include <MemoryManagement.h>
 #include <PeripheralDevice.h>
 #include <PowerManagement.h>
+#include <DisplayManager.h>
 #include <ClockSync.h>
 #include <BatteryInfo.h>
 #include <WifiModule.h>
+#include <SyncData.h>
+#include <WatchInterface.h>
+#include <CruxOSLog.h>
 
 #include <QMC5883LCompass.h>
 
 #include <RTClib.h>
-RTC_DS3231 rtc;
+//RTC_DS3231 rtc;
 
 SystemInfo info;
-WifiModule wifi;
 
 QMC5883LCompass compass;
+
+TFT_eSPI tft; 
+TFT_eSprite sprite = TFT_eSprite(&tft);
+WatchInterface watch(&tft, &sprite);
 
 void setup() {
   // put your setup code here, to run once:
@@ -36,6 +44,12 @@ void setup() {
   PeripheralDevice::get_instance()->init_compass();
   PeripheralDevice::get_instance()->init_accelerometer();
   PowerManagement* pm = pm->get_instance();
+  //DisplayManager *dm = dm->get_instance();
+  //dm->begin();
+  //dm->update_display("24:00");
+
+  
+
   //PowerManagement::power_optimisation();
   MemoryManagement::create_variable(CN_TIME_VAR, "24:00");
   MemoryManagement::create_variable(CN_WEATHER_VAR, "Cloudy");
@@ -48,59 +62,36 @@ void setup() {
   MemoryManagement::create_variable(CN_MILLIS_SINCE_START, ClockSync::get_millis()); // Should be nonvolatile later
   MemoryManagement::create_variable(CN_OS_NAME, "CameliaOS"); // should be nonvolatile later
   MemoryManagement::create_variable(CN_OS_VER, "1.0.1"); // should be nonvolatile later
+  MemoryManagement::create_variable(CN_WIFI_TIME_VAR, "");  // Set Wifi Time to empty
 
   compass.init();
   compass.setSmoothing(10, true);
   //compass.read();
 
-  rtc.begin();
-  //rtc.adjust(DateTime(2020, 1, 1, 15, 30, 0));
-  //wifi.begin("SSID", "PASSWORD");
 
+  ClockSync::reset_time();
+  ClockSync::set_rtc_clock(2022, 7, 24, 9, 30, 55);
+  watch.begin();
 }
 
-void counter() {
-  int32_t result = 0;
-  for(int16_t i = 0; i < 10; i++){
-    result = result * i;
-  }
-
-  Serial.println("Result Value: " + String(result));
-}
 
 void loop() {
-  //This is the loopable code
-  delay(1000);
-  //info.serial_print();
+    //This is the loopable code
+    Serial.flush();
+    delay(1000);
 
-  Serial.print("\nTime: ");
-  Serial.println(ClockSync::get_rtc_time().c_str());
-  ClockSync::time_update_loop();
+    //ClockSync::time_update_loop();
 
-  /*
-  BatteryInfo *bi = bi->get_instance();
-  Serial.print("%: ");
-  Serial.println(std::to_string(BatteryInfo::get_battery_percentage()).c_str());
-  Serial.print("Cap: ");
-  Serial.println(std::to_string(BatteryInfo::get_battery_capacity()).c_str());
-  Serial.print("V: ");
-  Serial.println(std::to_string(BatteryInfo::get_battery_voltage()).c_str());
-  */
-  // This function has to loop
-  //BatteryInfo::battery_loop();
-
-  //PeripheralDevice::get_device_orientation();
-  //PeripheralDevice::get_compass();
-  
-  //printf("Compass: [%d,%d,%d], {%d}\n", compass.getX(), compass.getY(), compass.getZ(), compass.getAzimuth());
-  //compass.read();
-  //printf("Compass Data:\n%s\n", PeripheralDevice::get_instance()->compass_to_string().c_str());
-  DateTime now = DateTime(rtc.now());
-  printf("RTC: %d:%d:%d\n", now.hour(),now.minute(),now.second());
-  //printf("BMA400: %s\n", PeripheralDevice::get_instance()->accelerometer_to_string().c_str());
-  PeripheralDevice::get_instance()->get_orientation();
-  wifi.get_time();
-}
+    std::string time_str = "RTC: "+ClockSync::get_day_of_week_string(true)+" "+ClockSync::get_year()+"/"+ClockSync::get_month()+"/"+ClockSync::get_day()+" - "+ ClockSync::get_hours() + ":" + ClockSync::get_minutes() + ":" + ClockSync::get_seconds();
+    CruxOSLog::Logging(__FUNCTION__, time_str.c_str());
+    CruxOSLog::Logging(__FUNCTION__, ClockSync::get_full_rtc_time().c_str());
+    PeripheralDevice::get_instance()->get_orientation();
+    int hour = ClockSync::get_int_hours();
+    int minute = ClockSync::get_int_minutes();
+    int seconds = ClockSync::get_int_seconds();
+    watch.draw(ClockSync::get_rtc_time());
+    //SyncData::get_instance()->sync();
+} 
 
 
 #endif

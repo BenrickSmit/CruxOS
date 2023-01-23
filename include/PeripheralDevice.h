@@ -22,6 +22,7 @@
 #include <QMC5883LCompass.h>
 
 #include <cruxos_constants.h>
+#include <CruxOSLog.h>
 
 class PeripheralDevice {
 public:
