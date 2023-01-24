@@ -1,6 +1,6 @@
 /**
  * \author Benrick Smit
- * \date Updated 25/12/2022
+ * \date Updated 2023/01/24
  * \brief The ClockSync class ensures that the RTC clock is updated and checks the current time it has with the wifi time
  *          after a set amount of time for CruxOS.
  * 
@@ -42,7 +42,7 @@ public:
     /// @return This is the minutes returned as an string
     static std::string get_minutes();
     static std::string get_seconds();
-    static std::string get_year();
+    static std::string get_year(bool abbreviation_flag = true);
     static std::string get_month();
     static std::string get_month_string(bool abbreviation_flag = true);
     static std::string get_day();

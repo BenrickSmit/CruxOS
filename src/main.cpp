@@ -69,6 +69,7 @@ void setup() {
   //compass.read();
 
 
+  
   ClockSync::reset_time();
   ClockSync::set_rtc_clock(2022, 7, 24, 9, 30, 55);
   watch.begin();

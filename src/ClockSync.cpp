@@ -63,9 +63,18 @@ std::string ClockSync::get_seconds(){
     return to_return;
 }
 
-std::string ClockSync::get_year() {
+std::string ClockSync::get_year(bool abbreviation_flag) {
     ClockSync *cs = cs->get_instance();
-    return std::to_string(cs->get_int_year());
+    std::string to_return = "";
+    if(abbreviation_flag){
+        // Return Abbreviated Year
+        to_return = std::to_string(cs->get_int_year());
+        to_return = to_return.substr(to_return.length()-2);
+    } else {
+        // Return full year.
+        to_return = std::to_string(cs->get_int_year());
+    }
+    return to_return;
 }
 
 std::string ClockSync::get_month() {
