@@ -9,6 +9,8 @@
 #ifndef SYNC_DATA_H
 #define SYNC_DATA_H
 
+#include <Arduino.h>
+
 #include <thread>
 
 #include <ClockSync.h>
@@ -23,6 +25,10 @@ public:
     static SyncData* get_instance();
 
     void sync();
+
+    static void button_setup();
+    static void button_update();
+
 
 protected:
 
@@ -48,6 +54,15 @@ private:
     long m_timer_millis;
 
     static SyncData* m_instance;
+
+    // Buttons
+    int m_button1_state = HIGH;
+    int m_button2_state = HIGH;
+    int m_button3_state = HIGH;
+
+    int m_button1_curr_state = LOW;
+    int m_button2_curr_state = LOW;
+    int m_button3_curr_state = LOW;
 };
 
 #endif // SYNC_DATA_H

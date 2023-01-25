@@ -48,6 +48,32 @@ void SyncData::sync(){
 
 }
 
+void SyncData::button_setup(){
+    pinMode(BUILTIN_BTN1_PIN, INPUT_PULLUP);
+    pinMode(BUILTIN_BTN2_PIN, INPUT_PULLUP);
+    pinMode(BUILTIN_BTN3_PIN, INPUT_PULLUP);
+}
+
+void SyncData::button_update(){
+    SyncData* sd = sd->get_instance();
+
+    sd->m_button1_curr_state = digitalRead(BUILTIN_BTN1_PIN);
+    sd->m_button2_curr_state = digitalRead(BUILTIN_BTN2_PIN);
+    sd->m_button3_curr_state = digitalRead(BUILTIN_BTN3_PIN);
+
+    if(sd->m_button1_curr_state == HIGH && sd->m_button1_state == LOW){
+        CruxOSLog::Logging(__FUNCTION__, "BUTTON 1 PRESSED");
+    }
+
+    if(sd->m_button2_curr_state == HIGH && sd->m_button2_state == LOW){
+        CruxOSLog::Logging(__FUNCTION__, "BUTTON 2 PRESSED");
+    }
+
+    if(sd->m_button3_curr_state == HIGH && sd->m_button3_state == LOW){
+        CruxOSLog::Logging(__FUNCTION__, "BUTTON 3 PRESSED");
+    }
+}
+
 void SyncData::update_time(){
     // This function should update the time in the ClockSync class based on whether it
     // received a new time that is different from the one stored in ClockSync.

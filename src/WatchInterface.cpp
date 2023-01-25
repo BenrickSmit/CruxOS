@@ -32,8 +32,8 @@ void WatchInterface::draw(std::string text){
     InterfaceHelper::draw_wide_line_clock_ticks(m_foreground_sprite, 120, 120, 120, 12, 2, 4, InterfaceHelper::get_orange(m_foreground_sprite));
     InterfaceHelper::draw_stylised_clock_hands(m_foreground_sprite, 120, 120, InterfaceHelper::get_hour(), InterfaceHelper::get_minutes(), InterfaceHelper::get_seconds(), InterfaceHelper::get_blue(m_foreground_sprite), true);
 
-    InterfaceHelper::draw_hours_text(m_foreground_sprite, 120, 70, InterfaceHelper::get_orange(m_foreground_sprite));
-    InterfaceHelper::draw_minutes_text(m_foreground_sprite, 120, 130,  InterfaceHelper::get_white(m_foreground_sprite));
+    InterfaceHelper::draw_hours_text(m_foreground_sprite, 120, 60, InterfaceHelper::get_orange(m_foreground_sprite));
+    InterfaceHelper::draw_minutes_text(m_foreground_sprite, 120, 140,  InterfaceHelper::get_white(m_foreground_sprite));
 
 
     int x = 50, y = 50, length = 8, angle = 65, offset = 8, box_size = 30;
