@@ -32,6 +32,36 @@ TFT_eSPI tft;
 TFT_eSprite sprite = TFT_eSprite(&tft);
 WatchInterface watch(&tft, &sprite);
 
+// Variables to keep track of button state
+bool button1Pressed = false;
+bool button2Pressed = false;
+bool button3Pressed = false;
+
+// Interrupt service routines
+void IRAM_ATTR button1Interrupt() {
+  button1Pressed = true;
+}
+
+void IRAM_ATTR button2Interrupt() {
+  button2Pressed = true;
+}
+
+void IRAM_ATTR button3Interrupt() {
+  button3Pressed = true;
+}
+
+void  display_next_screen(){
+  CruxOSLog::Logging(__FUNCTION__, "DISPLAY NEXT SCREEN");
+}
+
+void  display_previous_screen(){
+  CruxOSLog::Logging(__FUNCTION__, "DISPLAY PREVIOUS SCREEN");
+}
+
+void  display_on_off_screen(){
+  CruxOSLog::Logging(__FUNCTION__, "DISPLAY ON/OFF SCREEN");
+}
+
 void setup() {
   // put your setup code here, to run once:
   // Setup BAUD rate.
@@ -69,11 +99,25 @@ void setup() {
   //compass.read();
 
 
-  
   ClockSync::reset_time();
   ClockSync::set_rtc_clock(2022, 7, 24, 9, 30, 55);
   watch.begin();
+
+  //pinMode(BUILTIN_BTN2_PIN, INPUT_PULLUP);
+  //SyncData::button_setup();
+
+  pinMode(BUILTIN_BTN1_PIN, INPUT_PULLUP);
+  attachInterrupt(BUILTIN_BTN1_PIN, &button1Interrupt, FALLING);
+
+  //pinMode(BUILTIN_BTN2_PIN, INPUT_PULLUP);
+  //attachInterrupt(BUILTIN_BTN2_PIN, &display_previous_screen, CHANGE);
+
+  //pinMode(BUILTIN_BTN3_PIN, INPUT_PULLUP);
+  //attachInterrupt(BUILTIN_BTN3_PIN, &display_next_screen, CHANGE);
 }
+
+//int lastState = HIGH; // the previous state from the input pin
+//int currentState;     // the current reading from the input pin
 
 
 void loop() {
@@ -92,6 +136,36 @@ void loop() {
     int seconds = ClockSync::get_int_seconds();
     watch.draw(ClockSync::get_rtc_time());
     //SyncData::get_instance()->sync();
+
+    //currentState = digitalRead(BUILTIN_BTN2_PIN);
+    //digitalRead(BUILTIN_BTN1_PIN);
+    //digitalRead(BUILTIN_BTN2_PIN);
+    //digitalRead(BUILTIN_BTN3_PIN);
+
+    //if(lastState == LOW && currentState == HIGH)
+    //  Serial.println("The state changed from LOW to HIGH");
+
+    // save the last state
+    //lastState = currentState;
+    //SyncData::button_update();
+
+  if (button1Pressed) {
+    // Execute code for button 1 press
+    display_on_off_screen();
+    button1Pressed = false;
+  }
+  
+  if (button2Pressed) {
+    // Execute code for button 2 press
+    display_next_screen();
+    button2Pressed = false;
+  }
+  
+  if (button3Pressed) {
+    // Execute code for button 3 press
+    display_previous_screen();
+    button3Pressed = false;
+  }
 } 
 
 
