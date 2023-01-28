@@ -1,13 +1,18 @@
 #ifndef WATCHFACE_SETTINGS_H
 #define WATCHFACE_SETTINGS_H
 
-#pragma once
+#include <Arduino.h>
 
-class watchface_settings
-{
+#include <AbstractWatchInterface.h>
+
+#include <SystemInfo.h>
+#include <MemoryManagement.h>
+
+class watchface_settings : public AbstractWatchInterface {
 public:
-    watchface_settings();
-    ~watchface_settings();
+    watchface_settings(TFT_eSPI* tft, TFT_eSprite* foreground_sprite);
+
+    void draw();
 
 private:
 

@@ -20,7 +20,7 @@ void WatchInterface::begin()
     m_tft->setTextColor(TFT_WHITE, TFT_BLACK);
     m_tft->setTextDatum(MC_DATUM);
     m_tft->setTextSize(2);
-    m_tft->setFreeFont(&Roboto_Thin_24);;
+    m_tft->setFreeFont(&Roboto_Thin_24);
 }
 
 //#include <Fonts/GFXFF/>

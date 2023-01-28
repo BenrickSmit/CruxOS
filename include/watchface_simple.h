@@ -1,13 +1,15 @@
 #ifndef WATCHFACE_SIMPLE_H
 #define WATCHFACE_SIMPLE_H
 
-#pragma once
+#include <Arduino.h>
 
-class watchface_simple
-{
+#include <AbstractWatchInterface.h>
+
+class watchface_simple : public AbstractWatchInterface {
 public:
-    watchface_simple();
-    ~watchface_simple();
+    watchface_simple(TFT_eSPI* tft, TFT_eSprite* foreground_sprite);
+
+    void draw();
 
 private:
 

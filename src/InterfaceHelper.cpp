@@ -53,7 +53,7 @@ void InterfaceHelper::draw_circle_clock_ticks(TFT_eSprite* tft, int x, int y, in
 
 void InterfaceHelper::draw_system_information(TFT_eSprite* tft, int x, int y, std::string system_text, uint16_t colour_bg,
                                               uint16_t colour_border, bool selected, bool border){
-    // Get the width and height of the text to be displayed
+    /*/ Get the width and height of the text to be displayed
     int16_t txt_width = tft->textWidth(system_text.c_str());
     int16_t txt_height = tft->fontHeight();
 
@@ -77,13 +77,17 @@ void InterfaceHelper::draw_system_information(TFT_eSprite* tft, int x, int y, st
 
     // Fill the rectangle with the background color
     tft->drawSmoothRoundRect(x, y, border_roundness, border_roundness-border_width, rect_width, rect_height, colour_bg);
-
+    */
     // Calculate the x and y position of the text
+    /*
     int16_t text_x = x + (rect_width - txt_width) / 2;
     int16_t text_y = y + (rect_height - txt_height) / 2;
+    */
 
     // Draw the text
-    InterfaceHelper::set_freestyle_text(tft, system_text, text_x, text_y, TFT_WHITE, 0.08);
+    //InterfaceHelper::set_freestyle_text(tft, system_text, text_x, text_y, TFT_WHITE, 0.08);
+    //InterfaceHelper::set_defstyle_text(tft, system_text, x, y, TFT_WHITE, 0.08);
+    InterfaceHelper::set_defstyle_text(tft, system_text, x, y, colour_bg, 2);
 }
 
 int InterfaceHelper::get_hour()
@@ -786,7 +790,7 @@ void InterfaceHelper::draw_steps_text(TFT_eSprite* tft, int x, int y, int steps,
     std::string steps_string = std::to_string(steps);
     std::string output = "Total Steps Output: "+steps_string;
     CruxOSLog::Logging(__FUNCTION__, output);
-    set_defstyle_text(tft, steps_string.c_str(), x, y, colour_fill, 1); 
+    set_defstyle_text(tft, steps_string.c_str(), x, y, colour_fill, 2); 
 
 }
 
@@ -805,7 +809,7 @@ void InterfaceHelper::draw_seconds_text(TFT_eSprite* tft, int x, int y, uint16_t
 }
 
 void InterfaceHelper::draw_weekday_text(TFT_eSprite* tft, int x, int y, uint16_t colour_fill, bool abbreviation){
-    set_defstyle_text(tft, InterfaceHelper::get_week_day_string(abbreviation), x, y, colour_fill, 14);
+    set_defstyle_text(tft, InterfaceHelper::get_week_day_string(abbreviation), x, y, colour_fill, 2);
 }
 
 void InterfaceHelper::draw_day_text(TFT_eSprite* tft, int x, int y, uint16_t colour_fill){

@@ -90,6 +90,7 @@ const std::string CN_OS_NAME = "OPERATING_SYSTEM_NAME";
 const std::string CN_OS_VER = "OPERATING_SYSTEM_VER";
 const std::string CN_IP_ADDR = "NW_IP_ADDR";
 const std::string CN_BUILTIN_ACCEL_PIN = "ACCELEROMETER_PIN_NUMBER";
+const std::string CN_BATTERY_VAR = "BATTERY_POWER_LEVEL_VALUE";
 const std::string CN_ = "";
 
 // Weather Properties
