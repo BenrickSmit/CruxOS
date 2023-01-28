@@ -18,6 +18,7 @@
 #include <SyncData.h>
 #include <WatchInterface.h>
 #include <CruxOSLog.h>
+#include <WatchInterfaceManager.h>
 
 #include <QMC5883LCompass.h>
 
@@ -30,7 +31,8 @@ QMC5883LCompass compass;
 
 TFT_eSPI tft; 
 TFT_eSprite sprite = TFT_eSprite(&tft);
-WatchInterface watch(&tft, &sprite);
+//WatchInterface watch(&tft, &sprite);
+WatchInterfaceManager face_manager(&tft, &sprite);
 
 // Variables to keep track of button state
 bool button1Pressed = false;
@@ -51,10 +53,12 @@ void IRAM_ATTR button3Interrupt() {
 }
 
 void  display_next_screen(){
+  face_manager.draw_next_screen();
   CruxOSLog::Logging(__FUNCTION__, "DISPLAY NEXT SCREEN");
 }
 
 void  display_previous_screen(){
+  face_manager.draw_prev_screen();
   CruxOSLog::Logging(__FUNCTION__, "DISPLAY PREVIOUS SCREEN");
 }
 
@@ -81,6 +85,7 @@ void setup() {
   
 
   //PowerManagement::power_optimisation();
+  MemoryManagement::create_variable(CN_BATTERY_VAR, "25");
   MemoryManagement::create_variable(CN_TIME_VAR, "24:00");
   MemoryManagement::create_variable(CN_WEATHER_VAR, "Cloudy");
   MemoryManagement::create_variable(CN_WEATHER_TEMP_CURR_VAR, "77");
@@ -101,7 +106,9 @@ void setup() {
 
   ClockSync::reset_time();
   ClockSync::set_rtc_clock(2022, 7, 24, 9, 30, 55);
-  watch.begin();
+  //watch.begin();
+  face_manager.begin();
+  //face_manager.init();
 
   //pinMode(BUILTIN_BTN2_PIN, INPUT_PULLUP);
   //SyncData::button_setup();
@@ -109,11 +116,11 @@ void setup() {
   pinMode(BUILTIN_BTN1_PIN, INPUT_PULLUP);
   attachInterrupt(BUILTIN_BTN1_PIN, &button1Interrupt, FALLING);
 
-  //pinMode(BUILTIN_BTN2_PIN, INPUT_PULLUP);
-  //attachInterrupt(BUILTIN_BTN2_PIN, &display_previous_screen, CHANGE);
+  pinMode(BUILTIN_BTN2_PIN, INPUT_PULLUP);
+  attachInterrupt(BUILTIN_BTN2_PIN, &button2Interrupt, CHANGE);
 
-  //pinMode(BUILTIN_BTN3_PIN, INPUT_PULLUP);
-  //attachInterrupt(BUILTIN_BTN3_PIN, &display_next_screen, CHANGE);
+  pinMode(BUILTIN_BTN3_PIN, INPUT_PULLUP);
+  attachInterrupt(BUILTIN_BTN3_PIN, &button3Interrupt, CHANGE);
 }
 
 //int lastState = HIGH; // the previous state from the input pin
@@ -134,7 +141,8 @@ void loop() {
     int hour = ClockSync::get_int_hours();
     int minute = ClockSync::get_int_minutes();
     int seconds = ClockSync::get_int_seconds();
-    watch.draw(ClockSync::get_rtc_time());
+    //watch.draw(ClockSync::get_rtc_time());
+    
     //SyncData::get_instance()->sync();
 
     //currentState = digitalRead(BUILTIN_BTN2_PIN);
@@ -166,6 +174,8 @@ void loop() {
     display_previous_screen();
     button3Pressed = false;
   }
+
+  face_manager.init();
 } 
 
 
