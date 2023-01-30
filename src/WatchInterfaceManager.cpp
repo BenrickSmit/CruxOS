@@ -63,7 +63,7 @@ void WatchInterfaceManager::draw_basic_screens(){
     add_screen(new watchface_digital(m_tft, m_sprite));
     add_screen(new watchface_hitman(m_tft, m_sprite));
     add_screen(new watchface_withings(m_tft, m_sprite));
-    add_screen(new watchface_simple(m_tft, m_sprite));
+    //add_screen(new watchface_simple(m_tft, m_sprite));
     add_screen(new watchface_settings(m_tft, m_sprite));
 
     std::string display = "Created Basic Screens [" + std::to_string(m_screens.size()) + "].";

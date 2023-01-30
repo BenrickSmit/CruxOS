@@ -8,12 +8,12 @@
 #ifndef InterfaceHelper_H
 #define InterfaceHelper_H
 
-#include <Arduino_GFX.h>
-#include <Arduino_GFX_Library.h>
+//#include <Arduino_GFX.h>
+//#include <Arduino_GFX_Library.h>
 #include <TFT_eSPI.h>
 
 //#include <Fonts/FreeSans12pt7b.h>
-#include <font/glcdfont.h>
+//#include <font/glcdfont.h>
 //#include <Fonts/Custom/Orbitron_Light_24.h>
 
 #include <string>

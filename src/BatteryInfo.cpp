@@ -207,7 +207,7 @@ void BatteryInfo::battery_loop(){
     esp_timer_create(&timer_args, &timer_handle);
 
     // start the timer
-    esp_timer_start_periodic(timer_handle, BATTERY_UPDATE_TIMER); // check every 10 seconds
+    esp_timer_start_periodic(timer_handle, 10*100); // check every 10 seconds
 }
 
 void BatteryInfo::battery_update(){

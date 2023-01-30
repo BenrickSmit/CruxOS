@@ -85,7 +85,7 @@ void SyncData::update_time(){
     std::string str_SSID = MemoryManagement::get_value(CN_SSID_NAME_VAR);
     std::string str_PASS = MemoryManagement::get_value(CN_SSID_PASSWORD_VAR);
     sd->m_wifi.begin(str_SSID.c_str(), str_PASS.c_str());
-    sd->m_wifi.get_city();
+    sd->m_wifi.get_location_data();
     sd->m_wifi.get_time();
     std::string output = MemoryManagement::get_value(CN_WIFI_TIME_VAR);
     CruxOSLog::Logging(__FUNCTION__, output.c_str());

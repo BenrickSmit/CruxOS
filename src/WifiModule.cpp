@@ -63,31 +63,22 @@ void WifiModule::get_time(){
     //m_time_thread.detach();
 }
 
-void WifiModule::get_city(){
+void WifiModule::get_location_data(){
     // This function will get an estimated location for you based on the IP address
     if(WiFi.status() == WL_CONNECTED){
         // Don't do anything if there is no internet connectivity
         std::string new_city_string = "Mississippi";
         std::string new_utc_offset = "9";
-
-        // Get the City
-        std::string ip = m_client.localIP().toString().c_str();
+        std::string new_country_string = "Australia";
+        
 
         // Send GET request to the "ipapi" service
         // Make a GET request to ipapi
-        HTTPClient http_client;
-        std::string format_str = "json";
-        std::string call_request = "https://ipapi.co/"+ip+"/"+format_str.c_str()+"/";
-        call_request = "https://ipapi.co/";
-        call_request += format_str.c_str();
-        call_request += "/";
-/*
-        //call_request = "https://ipapi.co/city/";
-        //call_request = "GET https://ipapi.co/utc_offset/";
         m_client_secure.setInsecure(); // this line is necessary to ignore SSL certificate errors
 
         if (!m_client_secure.connect("ipapi.co", 443)) {
             // handle error
+            CruxOSLog::Logging(__FUNCTION__, "Connection to IPAPI.co NOT Possible");
             return;
         }
 
@@ -98,18 +89,29 @@ void WifiModule::get_city(){
                         "Connection: close\r\n\r\n");
 
         // wait for the response from the server
-        while (!m_client_secure.available()) {
-            delay(1);
-        }
+        while (!m_client_secure.available());
 
-        // read the response from the server
-        String response = m_client_secure.readString();
-        CruxOSLog::Logging(__FUNCTION__, response.c_str());*/
+        // read the response from the server and convert the result
+        std::string response = m_client_secure.readString().c_str();
+        std::map<std::string, std::string> json_data = get_json_map(response);
+        new_utc_offset = std::to_string(convert_utc_to_int(json_data["utc_offset"]));
+        new_city_string = json_data["city"].c_str();
+        new_country_string = json_data["country_name"].c_str();
+        //new_latitude_string = json_data["latitude"].c_str();
+        //new_longitude_string = json_data["longitude"].c_str();
+        //new_region_string = json_data["region"].c_str();
+        //CruxOSLog::Logging(__FUNCTION__, response.c_str());
+        CruxOSLog::Logging(__FUNCTION__, new_city_string);
+        //CruxOSLog::Logging(__FUNCTION__, new_country_string);
+        //CruxOSLog::Logging(__FUNCTION__, new_region_string);
+        CruxOSLog::Logging(__FUNCTION__, new_utc_offset);
 
         // Write to the memory address
         MemoryManagement::modify_variable(CN_EST_LOCATION_UTC_OFFSET_VAR, new_utc_offset);
         MemoryManagement::modify_variable(CN_EST_LOCATION_VAR, new_city_string);
-        new_city_string = "Updated City Information: " + new_city_string;
+        //MemoryManagement::create_variable(CN_EST_LOCATION_COUNTRY_VAR, new_country_string);   
+        //MemoryManagement::create_variable(CN_EST_LOCATION_REGION_VAR, new_region_string); 
+        new_city_string = "Updated Location Information: " + new_city_string;
         CruxOSLog::Logging(__FUNCTION__, new_city_string.c_str());
     }else {
         CruxOSLog::Logging(__FUNCTION__, "No Internet Connectivity - Using Default City", LOG_ERROR);
@@ -126,7 +128,8 @@ void WifiModule::read_time_server(){
     NTPClient time_client(ntp_udp);
     time_client.begin();
     time_client.update();
-    time_client.setTimeOffset(9*3600);
+    int utc_offset = std::stoi(MemoryManagement::get_value(CN_EST_LOCATION_UTC_OFFSET_VAR));
+    time_client.setTimeOffset(utc_offset*3600);
     time_t now = time_client.getEpochTime();
     struct tm timeinfo;
     gmtime_r(&now, &timeinfo);
@@ -145,13 +148,34 @@ void WifiModule::read_time_server(){
     CruxOSLog::Logging(__FUNCTION__, ctime(&now));
 }
 
-int WifiModule::get_city_utc_offset(){
-    // This function will take in a city name, and then get the UTC offset and return it.
-    int offset = 9;
-    std::string city_name = "yokohama";
+std::map<std::string, std::string> WifiModule::get_json_map(const std::string& input_string){
+    // This function will separate the JSON into key-value pairs and use it to create a map for use.
+    std::map<std::string, std::string> json_map;
+    size_t key_start = input_string.find("\"");
+    while (key_start != std::string::npos) {
+        // Convert the json into the necessary key-value pairs
+        key_start++;
+        size_t key_end = input_string.find("\"", key_start);
+        std::string key = input_string.substr(key_start, key_end - key_start);
+        size_t value_start = input_string.find(":", key_end) + 1;
+        size_t value_end = input_string.find(",", value_start);
+        std::string value = input_string.substr(value_start+1, value_end - value_start-1);
+        json_map[key] = value;
+        key_start = input_string.find("\"", value_end);
+    }
+    return json_map;
+}
 
+int WifiModule::convert_utc_to_int(const std::string& input_offset){
+    int number_sign = 1;
+    if (input_offset[0] == '-') {
+        number_sign = -1;
+    }
+    static int hours = std::atoi(input_offset.substr(2, 2).c_str());
+    CruxOSLog::Logging(__FUNCTION__, std::to_string(number_sign));
+    CruxOSLog::Logging(__FUNCTION__, input_offset.substr(2,2));
+    CruxOSLog::Logging(__FUNCTION__, std::to_string(std::atoi(input_offset.substr(2,2).c_str())).c_str());
     
-
-
-    return offset;
+    hours = hours * number_sign;
+    return hours;
 }
