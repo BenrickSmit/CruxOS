@@ -32,6 +32,7 @@ protected:
 private:
     std::vector<AbstractWatchInterface*> m_screens;
     int m_current_screen = 0;
+    bool m_screen_on_toggle;                            // This determines whether the screen is on or off
 
     TFT_eSPI *m_tft;
     TFT_eSprite *m_sprite;

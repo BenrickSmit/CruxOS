@@ -14,6 +14,7 @@
 const u_int32_t BAUD_RATE = 921600;//9600;//14400;115200;921600;
 
 // Basic Board Properties
+const u_int8_t BUILTIN_LED_POWER_PIN = 9;
 const u_int8_t BUILTIN_LED_PIN = 17;
 const u_int8_t BUILTIN_BTN1_PIN = 0;
 const u_int8_t BUILTIN_BTN2_PIN = 10;
@@ -38,6 +39,8 @@ const u_int8_t BUILTIN_ACCEL_INT2 = 35;
 const u_int8_t BUILTIN_ACCEL_INPUT = 0x01;
 const u_int8_t BUILTIN_ACCEL_FAILLING = 0x02;
 const u_int8_t BUILTIN_ACCEL_BME280_PIN = 118;
+const u_int16_t BASIC_BUTTON_PRESS_TIMER = 500;
+const u_int16_t BASIC_BUTTON_PRESS_THRESHOLD = 4000;
 
 // Screen Properties
 const u_int8_t SCREEN_WIDTH = 240;

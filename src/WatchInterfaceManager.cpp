@@ -5,6 +5,8 @@ WatchInterfaceManager::WatchInterfaceManager(TFT_eSPI *tft, TFT_eSprite *sprite)
     m_sprite = sprite;
     m_sprite->setColorDepth(8);
     m_sprite->createSprite(SCREEN_WIDTH, SCREEN_HEIGHT);
+    
+    m_screen_on_toggle = true;
 
     draw_basic_screens();
 }
@@ -60,10 +62,25 @@ void WatchInterfaceManager::draw_prev_screen() {
 }
 
 void WatchInterfaceManager::toggle_screen(){
-    if (m_tft->getWriteError()) {
-        m_tft->endWrite();
+    if(!m_screen_on_toggle){
+        // Turn on
+        pinMode(BUILTIN_LED_POWER_PIN, OUTPUT);
+        digitalWrite(BUILTIN_LED_POWER_PIN, HIGH);
+        //#ifdef ESP32
+        //    ledcAttachPin(BUILTIN_LED_POWER_PIN, OUTPUT);
+        //#endif            
+
+        m_screen_on_toggle = true;
     } else {
-        m_tft->startWrite();
+        // Turn off
+        //#ifdef ESP32
+        //    ledcDetachPin(BUILTIN_LED_POWER_PIN);
+        //#endif
+            pinMode(BUILTIN_LED_POWER_PIN, OUTPUT);
+            digitalWrite(BUILTIN_LED_POWER_PIN, LOW);
+            
+
+        m_screen_on_toggle = false;
     }
     CruxOSLog::Logging(__FUNCTION__, "Toggled Screen On/Off");
 }

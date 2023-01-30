@@ -33,23 +33,79 @@ TFT_eSprite sprite = TFT_eSprite(&tft);
 WatchInterfaceManager face_manager(&tft, &sprite);
 
 // Variables to keep track of button state
-bool button1Pressed = false;
-bool button2Pressed = false;
-bool button3Pressed = false;
+bool button_1_pressed = false;
+bool button_2_pressed = false;
+bool button_3_pressed = false;
+bool button_4_pressed = false;
+bool button_5_pressed = false;
+bool button_6_pressed = false;
+int counter = 0;     // a counter for button presses
+unsigned long timer = 0; // a timer for tracking button presses
+
 
 // Interrupt service routines
 void IRAM_ATTR button1Interrupt() {
-  button1Pressed = true;
+  // Check for Long Presses
+  if ((millis() - timer) >= BASIC_BUTTON_PRESS_THRESHOLD){
+    button_4_pressed = true;
+  }
+
+  // Check for Double Presses
+  if ((millis() - timer) > BASIC_BUTTON_PRESS_TIMER) {  // 500 milliseconds is the time period
+    counter = 0;
+  }
+  counter++;
+  timer = millis();
+
+  if (counter == 2) {
+    // Handle double press
+    button_1_pressed = true;
+    counter = 0;
+  }
+  
 }
 
 void IRAM_ATTR button2Interrupt() {
-  button2Pressed = true;
+  // Check for Long Presses
+  if ((millis() - timer) >= BASIC_BUTTON_PRESS_THRESHOLD){
+    button_5_pressed = true;
+  }
+
+  // Check for Double Presses
+  if ((millis() - timer) > BASIC_BUTTON_PRESS_TIMER) {  // 500 milliseconds is the time period
+    counter = 0;
+  }
+  counter++;
+  timer = millis();
+
+  if (counter == 2) {
+    // Handle double press
+    button_2_pressed = true;
+    counter = 0;
+  }
 }
 
 void IRAM_ATTR button3Interrupt() {
-  button3Pressed = true;
+  // Check for Long Presses
+  if ((millis() - timer) >= BASIC_BUTTON_PRESS_THRESHOLD){
+    button_6_pressed = true;
+  }
+
+  // Check for Double Presses
+  if ((millis() - timer) > BASIC_BUTTON_PRESS_TIMER) {  // 500 milliseconds is the time period
+    counter = 0;
+  }
+  counter++;
+  timer = millis();
+
+  if (counter == 2) {
+    // Handle double press
+    button_3_pressed = true;
+    counter = 0;
+  }
 }
 
+// Enables Pedometer
 portMUX_TYPE weakup_interrupt_pin_mux = portMUX_INITIALIZER_UNLOCKED;
 void IRAM_ATTR handle_wakeup_external_interrupt(){
     portENTER_CRITICAL_ISR(&weakup_interrupt_pin_mux);
@@ -150,11 +206,6 @@ void setup() {
   //compass.read();
 
 
-
- 
-
-
-
   ClockSync::reset_time();
   ClockSync::set_rtc_clock(2022, 7, 24, 9, 30, 55);
   face_manager.begin();
@@ -163,10 +214,10 @@ void setup() {
   attachInterrupt(BUILTIN_BTN1_PIN, &button1Interrupt, FALLING);
 
   pinMode(BUILTIN_BTN2_PIN, INPUT_PULLUP);
-  attachInterrupt(BUILTIN_BTN2_PIN, &button2Interrupt, CHANGE);
+  attachInterrupt(BUILTIN_BTN2_PIN, &button2Interrupt, FALLING);
 
   pinMode(BUILTIN_BTN3_PIN, INPUT_PULLUP);
-  attachInterrupt(BUILTIN_BTN3_PIN, &button3Interrupt, CHANGE);
+  attachInterrupt(BUILTIN_BTN3_PIN, &button3Interrupt, FALLING);
 
   pinMode(BUILTIN_ACCEL_INT2, INPUT_PULLUP);
   attachInterrupt(digitalPinToInterrupt(BUILTIN_ACCEL_INT2), handle_wakeup_external_interrupt, FALLING);
@@ -187,22 +238,40 @@ void loop() {
     //pm->power_optimisation(); // Causes reboot for some reason.
 
   // Handle Button Interrupts
-  if (button1Pressed) {
+  if (button_1_pressed) {
     // Execute code for button 1 press
     display_on_off_screen();
-    button1Pressed = false;
+    button_1_pressed = false;
   }
   
-  if (button2Pressed) {
+  if (button_2_pressed) {
     // Execute code for button 2 press
     display_next_screen();
-    button2Pressed = false;
+    button_2_pressed = false;
   }
   
-  if (button3Pressed) {
+  if (button_3_pressed) {
     // Execute code for button 3 press
     display_previous_screen();
-    button3Pressed = false;
+    button_3_pressed = false;
+  }
+
+  if (button_4_pressed) {
+    // Execute code for button 4 press
+    
+    button_4_pressed = false;
+  }
+  
+  if (button_5_pressed) {
+    // Execute code for button 5 press
+    
+    button_5_pressed = false;
+  }
+  
+  if (button_6_pressed) {
+    // Execute code for button 6 press
+    
+    button_6_pressed = false;
   }
 
   PeripheralDevice::get_instance()->handle_accel_interrupts();
