@@ -11,7 +11,6 @@
 #include <MemoryManagement.h>
 #include <PeripheralDevice.h>
 #include <PowerManagement.h>
-#include <DisplayManager.h>
 #include <ClockSync.h>
 #include <BatteryInfo.h>
 #include <WifiModule.h>
@@ -31,7 +30,6 @@ QMC5883LCompass compass;
 
 TFT_eSPI tft; 
 TFT_eSprite sprite = TFT_eSprite(&tft);
-//WatchInterface watch(&tft, &sprite);
 WatchInterfaceManager face_manager(&tft, &sprite);
 
 // Variables to keep track of button state
@@ -63,6 +61,7 @@ void  display_previous_screen(){
 }
 
 void  display_on_off_screen(){
+  //face_manager.toggle_screen();
   CruxOSLog::Logging(__FUNCTION__, "DISPLAY ON/OFF SCREEN");
 }
 
@@ -113,9 +112,6 @@ void setup() {
   PeripheralDevice::get_instance()->init_compass();
   PeripheralDevice::get_instance()->init_accelerometer();
   PowerManagement* pm = pm->get_instance();
-  //DisplayManager *dm = dm->get_instance();
-  //dm->begin();
-  //dm->update_display("24:00");
 
   // For Battery
   pinMode(BUILTIN_BATTERY_PIN, OUTPUT);
@@ -128,19 +124,17 @@ void setup() {
   MemoryManagement::create_variable(CN_WEATHER_TEMP_CURR_VAR, "77");
   MemoryManagement::create_variable(CN_WEATHER_TEMP_MAX_VAR, "78");
   MemoryManagement::create_variable(CN_WEATHER_TEMP_MIN_VAR, "76");
-  MemoryManagement::create_variable(CN_EST_LOCATION_VAR, "Tokyo");
-  MemoryManagement::create_variable(CN_EST_LOCATION_UTC_OFFSET_VAR, "9");  // Set Wifi Time to empty
-  MemoryManagement::create_variable(CN_BLUETOOTH_CONNECTION_VAR, "Not-Connected");
+  MemoryManagement::create_variable(CN_EST_LOCATION_VAR, "Tokyo");  // Set the city
+  MemoryManagement::create_variable(CN_EST_LOCATION_UTC_OFFSET_VAR, "9");  // Set Location UTC offset
+  //MemoryManagement::create_variable(CN_EST_LOCATION_COUNTRY_VAR, "Australia");  // Set the Country
+  //MemoryManagement::create_variable(CN_EST_LOCATION_REGION_VAR, "Wales");  // Set the region
+  //MemoryManagement::create_variable(CN_BLUETOOTH_CONNECTION_VAR, "Not-Connected");
   MemoryManagement::create_variable(CN_SSID_NAME_VAR, "Unknown");
   MemoryManagement::create_variable(CN_SSID_PASSWORD_VAR, "Unknown");
-  MemoryManagement::create_variable(CN_IP_ADDR, "Unknown");
   MemoryManagement::create_variable(CN_MILLIS_SINCE_START, ClockSync::get_millis()); // Should be nonvolatile later
   MemoryManagement::create_variable(CN_OS_NAME, "Crux:CameliaOS"); // should be nonvolatile later
   MemoryManagement::create_variable(CN_OS_VER, "1.0.1"); // should be nonvolatile later
   MemoryManagement::create_variable(CN_WIFI_TIME_VAR, "");  // Set Wifi Time to empty
-
-  // Location Informa
-  //MemoryManagement::create_variable(CN_, "");
 
   compass.init();
   compass.setSmoothing(10, true);
@@ -148,14 +142,10 @@ void setup() {
 
 
 
+
   ClockSync::reset_time();
   ClockSync::set_rtc_clock(2022, 7, 24, 9, 30, 55);
-  //watch.begin();
   face_manager.begin();
-  //face_manager.init();
-
-  //pinMode(BUILTIN_BTN2_PIN, INPUT_PULLUP);
-  //SyncData::button_setup();
 
   pinMode(BUILTIN_BTN1_PIN, INPUT_PULLUP);
   attachInterrupt(BUILTIN_BTN1_PIN, &button1Interrupt, FALLING);
@@ -170,40 +160,17 @@ void setup() {
   //animation.detach();
 }
 
-//int lastState = HIGH; // the previous state from the input pin
-//int currentState;     // the current reading from the input pin
-
-
 void loop() {
     //This is the loopable code
     Serial.flush();
-    delay(1000);
+    delay(ARDUINO_DELAY);
 
-    //ClockSync::time_update_loop();
-
-    std::string time_str = "RTC: "+ClockSync::get_day_of_week_string(true)+" "+ClockSync::get_year()+"/"+ClockSync::get_month()+"/"+ClockSync::get_day()+" - "+ ClockSync::get_hours() + ":" + ClockSync::get_minutes() + ":" + ClockSync::get_seconds();
-    CruxOSLog::Logging(__FUNCTION__, time_str.c_str());
-    CruxOSLog::Logging(__FUNCTION__, ClockSync::get_full_rtc_time().c_str());
     PeripheralDevice::get_instance()->get_orientation();
-    int hour = ClockSync::get_int_hours();
-    int minute = ClockSync::get_int_minutes();
-    int seconds = ClockSync::get_int_seconds();
-    //watch.draw(ClockSync::get_rtc_time());
-    
     SyncData::get_instance()->sync();
+    PowerManagement *pm = pm->get_instance();
+    pm->power_optimisation();
 
-    //currentState = digitalRead(BUILTIN_BTN2_PIN);
-    //digitalRead(BUILTIN_BTN1_PIN);
-    //digitalRead(BUILTIN_BTN2_PIN);
-    //digitalRead(BUILTIN_BTN3_PIN);
-
-    //if(lastState == LOW && currentState == HIGH)
-    //  Serial.println("The state changed from LOW to HIGH");
-
-    // save the last state
-    //lastState = currentState;
-    //SyncData::button_update();
-
+  // Handle Button Interrupts
   if (button1Pressed) {
     // Execute code for button 1 press
     display_on_off_screen();
