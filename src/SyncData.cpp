@@ -71,6 +71,9 @@ void SyncData::sync(){
 
     // Update The Compass
 
+
+    // Save The Time As Necessary
+    ClockSync::save_time_to_memory();
 }
 
 void SyncData::setup(){

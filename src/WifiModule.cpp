@@ -124,28 +124,32 @@ void WifiModule::get_weather(){
 
 void WifiModule::read_time_server(){
     // This function will try as many of the time servers as possible to obtain the current time
-    WiFiUDP ntp_udp;
-    NTPClient time_client(ntp_udp);
-    time_client.begin();
-    time_client.update();
-    int utc_offset = std::stoi(MemoryManagement::get_value(CN_EST_LOCATION_UTC_OFFSET_VAR));
-    time_client.setTimeOffset(utc_offset*3600);
-    time_t now = time_client.getEpochTime();
-    struct tm timeinfo;
-    gmtime_r(&now, &timeinfo);
+    if(WiFi.status() == WL_CONNECTED){
+        WiFiUDP ntp_udp;
+        NTPClient time_client(ntp_udp);
+        time_client.begin();
+        time_client.update();
+        int utc_offset = std::stoi(MemoryManagement::get_value(CN_EST_LOCATION_UTC_OFFSET_VAR));
+        time_client.setTimeOffset(utc_offset*3600);
+        time_t now = time_client.getEpochTime();
+        struct tm timeinfo;
+        gmtime_r(&now, &timeinfo);
 
-    int day = timeinfo.tm_mday;
-    int month = timeinfo.tm_mon + 1;
-    int year = timeinfo.tm_year + 1900;
-    int hour = timeinfo.tm_hour;
-    int minute = timeinfo.tm_min;
-    int second = timeinfo.tm_sec;
+        int day = timeinfo.tm_mday;
+        int month = timeinfo.tm_mon + 1;
+        int year = timeinfo.tm_year + 1900;
+        int hour = timeinfo.tm_hour;
+        int minute = timeinfo.tm_min;
+        int second = timeinfo.tm_sec;
 
-    std::string TIME_STR = std::to_string(year)+":"+std::to_string(month)+":"+std::to_string(day)+":"+
-                            std::to_string(hour)+":"+std::to_string(minute)+":"+std::to_string(second);
-    // Write the Time to the Time Variable as Necessary
-    MemoryManagement::modify_variable(CN_WIFI_TIME_VAR,TIME_STR.c_str());
-    CruxOSLog::Logging(__FUNCTION__, ctime(&now));
+        std::string TIME_STR = std::to_string(year)+":"+std::to_string(month)+":"+std::to_string(day)+":"+
+                                std::to_string(hour)+":"+std::to_string(minute)+":"+std::to_string(second);
+        // Write the Time to the Time Variable as Necessary
+        MemoryManagement::modify_variable(CN_WIFI_TIME_VAR,TIME_STR.c_str());
+        CruxOSLog::Logging(__FUNCTION__, ctime(&now));
+    }else{
+        CruxOSLog::Logging(__FUNCTION__, "Can't Find NTPClient Server: No Internet", LOG_ERROR);
+    }
 }
 
 std::map<std::string, std::string> WifiModule::get_json_map(const std::string& input_string){

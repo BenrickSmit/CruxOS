@@ -149,6 +149,12 @@ void setup() {
   compass.setSmoothing(10, true);
   //compass.read();
 
+
+
+ 
+
+
+
   ClockSync::reset_time();
   ClockSync::set_rtc_clock(2022, 7, 24, 9, 30, 55);
   face_manager.begin();

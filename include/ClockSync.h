@@ -91,6 +91,7 @@ public:
 
 
     static time_t to_time_t(const DateTime& input_datetime);
+    static void save_time_to_memory();
 
     /// @brief This function creates a DateTime object to use for later
     /// @param year This is the year variable to set

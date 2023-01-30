@@ -257,6 +257,24 @@ time_t ClockSync::to_time_t(const DateTime &input_datetime) {
     CruxOSLog::Logging(__FUNCTION__, "Converted DateTime to time_t");
 }
 
+void ClockSync::save_time_to_memory(){
+    ClockSync *cs = cs->get_instance();
+    time_t now = ClockSync::to_time_t(cs->m_rtc.now());
+    struct tm timeinfo;
+    gmtime_r(&now, &timeinfo);
+
+    int day = timeinfo.tm_mday;
+    int month = timeinfo.tm_mon + 1;
+    int year = timeinfo.tm_year + 1900;
+    int hour = timeinfo.tm_hour;
+    int minute = timeinfo.tm_min;
+    int second = timeinfo.tm_sec;
+
+    std::string TIME_STR = std::to_string(year)+":"+std::to_string(month)+":"+std::to_string(day)+":"+
+                            std::to_string(hour)+":"+std::to_string(minute)+":"+std::to_string(second);
+    MemoryManagement::modify_variable(CN_WIFI_TIME_VAR, TIME_STR);
+}
+
 DateTime ClockSync::create_datetime(int year, int month, int day, int hour, int minute, int second){
     return DateTime(year, month, day, hour, minute, second);
     CruxOSLog::Logging(__FUNCTION__, "Created a DateTime Object and Returned it");

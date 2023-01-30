@@ -43,9 +43,11 @@ void watchface_withings::draw(){
     std::string weather_max_temp = MemoryManagement::get_value(CN_WEATHER_TEMP_MAX_VAR);
     bool display_weather_data = (weather_information != "N/A" ? true: false);
 
+
+    unsigned long current_millis = millis();
     if(display_weather_data){
         // Only display the weather information if it can get the relevant data
-        if (millis() - m_start_time < m_display_duration) {
+        if (current_millis - m_start_time < m_display_duration) {
             // draw first image here
             get_sprite()->fillSmoothCircle(120, 80, circle_radius, main_colour_dark);
             InterfaceHelper::draw_weather_status(get_sprite(), 105, 65, weather_information.c_str());
@@ -67,7 +69,7 @@ void watchface_withings::draw(){
     // Date
     // Change between the date and the year
     std::string text = "";
-        if (millis() - m_start_time < m_display_duration) {
+        if (current_millis - m_start_time < m_display_duration) {
             // draw first image here
             get_sprite()->fillSmoothCircle(70, 160, circle_radius, main_colour_dark);
             text = InterfaceHelper::get_month_string(true) +"-"+InterfaceHelper::get_day_string();
@@ -76,7 +78,7 @@ void watchface_withings::draw(){
         } else {
             // draw second image here
             get_sprite()->fillSmoothCircle(70, 160, circle_radius, main_colour_dark);
-            std::string text = InterfaceHelper::get_year_string(false);
+            text = InterfaceHelper::get_year_string(false);
             InterfaceHelper::draw_custom_text(get_sprite(), 70, 158, text, 1.5, text_colour);
         } 
 
