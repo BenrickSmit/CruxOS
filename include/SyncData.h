@@ -18,6 +18,7 @@
 #include <MemoryManagement.h>
 #include <WifiModule.h>
 #include <BatteryInfo.h>
+#include <PeripheralDevice.h>
 #include <cruxos_constants.h>
 
 

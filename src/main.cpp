@@ -50,6 +50,14 @@ void IRAM_ATTR button3Interrupt() {
   button3Pressed = true;
 }
 
+portMUX_TYPE weakup_interrupt_pin_mux = portMUX_INITIALIZER_UNLOCKED;
+void IRAM_ATTR handle_wakeup_external_interrupt(){
+    portENTER_CRITICAL_ISR(&weakup_interrupt_pin_mux);
+    PeripheralDevice::set_step_interrupt(true);
+    portEXIT_CRITICAL_ISR(&weakup_interrupt_pin_mux);
+    CruxOSLog::Logging(__FUNCTION__, "Accelerometer Wakeup Interrupt");
+}
+
 void  display_next_screen(){
   face_manager.draw_next_screen();
   CruxOSLog::Logging(__FUNCTION__, "DISPLAY NEXT SCREEN");
@@ -61,7 +69,7 @@ void  display_previous_screen(){
 }
 
 void  display_on_off_screen(){
-  //face_manager.toggle_screen();
+  face_manager.toggle_screen();
   CruxOSLog::Logging(__FUNCTION__, "DISPLAY ON/OFF SCREEN");
 }
 
@@ -135,13 +143,11 @@ void setup() {
   MemoryManagement::create_variable(CN_OS_NAME, "Crux:CameliaOS"); // should be nonvolatile later
   MemoryManagement::create_variable(CN_OS_VER, "1.0.1"); // should be nonvolatile later
   MemoryManagement::create_variable(CN_WIFI_TIME_VAR, "");  // Set Wifi Time to empty
+  MemoryManagement::create_variable(CN_STEPS_SAVED, "0");  
 
   compass.init();
   compass.setSmoothing(10, true);
   //compass.read();
-
-
-
 
   ClockSync::reset_time();
   ClockSync::set_rtc_clock(2022, 7, 24, 9, 30, 55);
@@ -156,6 +162,10 @@ void setup() {
   pinMode(BUILTIN_BTN3_PIN, INPUT_PULLUP);
   attachInterrupt(BUILTIN_BTN3_PIN, &button3Interrupt, CHANGE);
 
+  pinMode(BUILTIN_ACCEL_INT2, INPUT_PULLUP);
+  attachInterrupt(digitalPinToInterrupt(BUILTIN_ACCEL_INT2), handle_wakeup_external_interrupt, FALLING);
+
+
   //std::thread animation(animation_thread);
   //animation.detach();
 }
@@ -168,7 +178,7 @@ void loop() {
     PeripheralDevice::get_instance()->get_orientation();
     SyncData::get_instance()->sync();
     PowerManagement *pm = pm->get_instance();
-    pm->power_optimisation();
+    //pm->power_optimisation(); // Causes reboot for some reason.
 
   // Handle Button Interrupts
   if (button1Pressed) {
@@ -188,6 +198,8 @@ void loop() {
     display_previous_screen();
     button3Pressed = false;
   }
+
+  PeripheralDevice::get_instance()->handle_accel_interrupts();
 
   face_manager.init();
 } 

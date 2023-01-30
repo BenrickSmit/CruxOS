@@ -58,7 +58,7 @@ void watchface_withings::draw(){
         } 
     }
     // Steps
-    int steps_total = 10800;
+    int steps_total = std::stoi(MemoryManagement::get_value(CN_STEPS_SAVED));
     if(steps_total > -1) {
         get_sprite()->fillSmoothCircle(120, 180, circle_radius, main_colour_dark);
         InterfaceHelper::draw_steps_text(get_sprite(), 120, 174, steps_total, text_colour);
@@ -95,23 +95,6 @@ void watchface_withings::draw(){
     InterfaceHelper::draw_clock_hand_wedge(get_sprite(), 120, 120, SCREEN_WIDTH_CENTRE*0.32, SCREEN_WIDTH_CENTRE*0.22, InterfaceHelper::convert_to_angle(InterfaceHelper::get_hour(),12)-90, 2, battery_colour);
     InterfaceHelper::draw_clock_hand_wedge(get_sprite(), 120, 120, SCREEN_WIDTH_CENTRE*0.52, SCREEN_WIDTH_CENTRE*0.22, InterfaceHelper::convert_to_angle(InterfaceHelper::get_minutes(),60)-90, 1, battery_colour);
     
-
-    //InterfaceHelper::draw_stylised_clock_hands(get_sprite(), 120, 120, InterfaceHelper::get_hour(), InterfaceHelper::get_minutes(), InterfaceHelper::get_seconds(), InterfaceHelper::get_battery_colour(get_sprite(), battery_level), true);
-
-    //Add in the extra detail
-    // Steps
-    //InterfaceHelper::draw_steps_text(get_sprite(), 170, 190, 10800, text_colour);
-    // Days
-    //std::string display = InterfaceHelper::get_month_string(true) + "-" + InterfaceHelper::get_day_string();
-    //InterfaceHelper::draw_system_information(get_sprite(), 65, 60, display, text_colour, bg_colour);
-    // Week day
-    //InterfaceHelper::draw_weekday_text(get_sprite(), 170, 60, text_colour, true);
-    // Weather
-    //InterfaceHelper::draw_weather_status(get_sprite(), 48, 190, InterfaceHelper::get_weather_string(WEATHER_CODE(1)));
-
-    
-    //InterfaceHelper::draw_battery_line(get_sprite(), 45, 178, 150, battery_level);
-
 
     AbstractWatchInterface::create_image();
 }

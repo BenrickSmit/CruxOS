@@ -22,6 +22,7 @@ public:
     void begin();
     void draw_next_screen();
     void draw_prev_screen();
+    void toggle_screen();
 
 
     void draw_basic_screens();

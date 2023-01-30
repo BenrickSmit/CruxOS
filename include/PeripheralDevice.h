@@ -23,10 +23,12 @@
 
 #include <cruxos_constants.h>
 #include <CruxOSLog.h>
+#include <MemoryManagement.h>
 
 class PeripheralDevice {
 public:
     static PeripheralDevice* get_instance();
+    static void delete_instance();
 
     void init_compass();
     void get_compass_coordinates(float& x, float& y, float& z);
@@ -37,6 +39,11 @@ public:
     std::string accelerometer_to_string() const;
     DEVICE_ORIENTATION get_orientation() const;
 
+    static void set_step_interrupt(bool new_int);
+    static bool has_step_interrupt();
+    static void handle_accel_interrupts();
+    static void reset_peripherals();
+
 protected:
     bool float_comparison(const double &magnitude, const double &gravity, const double &epsilon = 0.1) const;
     bool tilted_comparison(const double &magnitude, const double &gravity, const double &epsilon = 0.1) const;
@@ -46,12 +53,14 @@ protected:
 
 private:
     PeripheralDevice();
-    PeripheralDevice(const PeripheralDevice&) = delete;
+    ~PeripheralDevice();
+    PeripheralDevice(const PeripheralDevice &) = delete;
     PeripheralDevice& operator=(const PeripheralDevice&) = delete;
 
     QMC5883LCompass m_compass;
     BMA400 m_accelerometer;
     static PeripheralDevice* m_instance;
+    bool m_new_step_interrupt;
 
     mutable float m_accelerometer_x;
     mutable float m_accelerometer_y;

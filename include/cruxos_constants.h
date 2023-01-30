@@ -88,6 +88,7 @@ const std::string CN_MILLIS_SINCE_START = "MS_SINCE_BOOT";
 const std::string CN_OS_NAME = "OPERATING_SYSTEM_NAME";
 const std::string CN_OS_VER = "OPERATING_SYSTEM_VER";
 const std::string CN_BATTERY_VAR = "BATTERY_POWER_LEVEL_VALUE";
+const std::string CN_STEPS_SAVED = "";
 const std::string CN_ = "";
 
 // Weather Properties

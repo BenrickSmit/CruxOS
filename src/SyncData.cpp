@@ -61,6 +61,11 @@ void SyncData::sync(){
     //ClockSync::time_update_loop();
 
     // Update The Pedometer
+    // If It's Midnight, then reset the pedometer
+    if(ClockSync::get_int_hours() < 1 && ClockSync::get_int_minutes() <= 1){
+        PeripheralDevice *pd = pd->get_instance();
+        pd->reset_peripherals();
+    }
 
     // Update The Display
 

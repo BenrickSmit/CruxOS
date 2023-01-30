@@ -9,12 +9,21 @@ PeripheralDevice* PeripheralDevice::get_instance() {
   return m_instance;
 }
 
+void PeripheralDevice::delete_instance(){
+    delete m_instance;
+    m_instance = nullptr;
+}
+
 PeripheralDevice::PeripheralDevice() {}
+
+PeripheralDevice::~PeripheralDevice() {
+}
 
 void PeripheralDevice::init_compass() {
   m_compass.init();
   
 }
+
 
 void PeripheralDevice::get_compass_coordinates(float& x, float& y, float& z) {
   m_compass.read();
@@ -41,7 +50,28 @@ void PeripheralDevice::init_accelerometer(){
         BMA400::power_mode_t::NORMAL_LOW_NOISE,
         BMA400::output_data_rate_t::Filter2_100Hz,
         BMA400::acceleation_range_t::RANGE_8G);
+
+
+        m_accelerometer.DisableInterrupts(); //reset interrupts
+
+        m_accelerometer.ConfigureStepDetectorCounter(
+                true,                              // Enable Single tap
+                BMA400::interrupt_pin_t::INT_PIN_1 // Trigger on Interrupt Pin 1
+        );
+
+            m_accelerometer.ConfigureInterruptPinSettings(
+                false, // Disable Latch
+                false, // Interrupt Pin 1 active low
+                false, // Interrupt Pin 1 in push-pull mode
+                false, // Interrupt Pin 2 active low
+                false  // Interrupt Pin 2 in push-pull mode
+            );
+
+            while (m_accelerometer.GetInterrupts()); // make sure there is no interrupt on the queue
+
+            m_new_step_interrupt = false;
     }
+
 }
 
 void PeripheralDevice::get_accelerometer_coordinates(float& x, float& y, float& z) const{
@@ -94,6 +124,40 @@ DEVICE_ORIENTATION PeripheralDevice::get_orientation() const{
     }
     //printf("--> M: %f, G: %f, E: %f\n", magnitude, 9.8, 0.1);
     return (DEVICE_ORIENTATION());
+}
+
+void PeripheralDevice::set_step_interrupt(bool new_int){
+    PeripheralDevice *pd = pd->get_instance();
+    pd->m_new_step_interrupt = new_int;
+}
+
+bool PeripheralDevice::has_step_interrupt(){
+    PeripheralDevice *pd = pd->get_instance();
+    return pd->m_new_step_interrupt;
+}
+
+void PeripheralDevice::handle_accel_interrupts(){
+    
+    PeripheralDevice *pd = pd->get_instance();
+    if (pd->has_step_interrupt()){
+        CruxOSLog::Logging(__FUNCTION__, "Started Accelerometer Interrupt");
+        BMA400::interrupt_source_t source = pd->m_accelerometer.GetInterrupts();
+        if (source && BMA400::interrupt_source_t::ADV_STEP_DETECTOR_COUNTER){
+            CruxOSLog::Logging(__FUNCTION__, "Single Step Detected");
+        }else if (source && BMA400::interrupt_source_t::ADV_STEP_DETECTOR_COUNTER_DOUBLE_STEP){
+            CruxOSLog::Logging(__FUNCTION__, "Double Step Detected");
+        }
+
+        pd->set_step_interrupt(false);
+    }
+    std::string steps = ">>>>>>Steps: "+std::to_string(pd->m_accelerometer.GetTotalSteps());
+    CruxOSLog::Logging(__FUNCTION__, steps.c_str());
+    MemoryManagement::modify_variable(CN_STEPS_SAVED, std::to_string(pd->m_accelerometer.GetTotalSteps()));
+}
+
+void PeripheralDevice::reset_peripherals(){
+    PeripheralDevice *pd = pd->get_instance();
+    pd->m_accelerometer.ResetStepCounter();
 }
 
 bool PeripheralDevice::float_comparison(const double& magnitude,const  double& gravity,const  double& epsilon) const{

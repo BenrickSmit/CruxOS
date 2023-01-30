@@ -59,6 +59,15 @@ void WatchInterfaceManager::draw_prev_screen() {
     CruxOSLog::Logging(__FUNCTION__, "Drew Previous Screen");
 }
 
+void WatchInterfaceManager::toggle_screen(){
+    if (m_tft->getWriteError()) {
+        m_tft->endWrite();
+    } else {
+        m_tft->startWrite();
+    }
+    CruxOSLog::Logging(__FUNCTION__, "Toggled Screen On/Off");
+}
+
 void WatchInterfaceManager::draw_basic_screens(){
     add_screen(new watchface_digital(m_tft, m_sprite));
     add_screen(new watchface_hitman(m_tft, m_sprite));

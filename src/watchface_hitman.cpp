@@ -30,7 +30,8 @@ void watchface_hitman::draw(){
 
     //Add in the extra detail
     // Steps
-    InterfaceHelper::draw_steps_text(get_sprite(), 170, 190, 10800, text_colour);
+    std::string steps = MemoryManagement::get_value(CN_STEPS_SAVED);
+    InterfaceHelper::draw_steps_text(get_sprite(), 170, 190, std::stoi(steps), text_colour);
     // Days
     std::string display = InterfaceHelper::get_month_string(true) + "-" + InterfaceHelper::get_day_string();
     InterfaceHelper::draw_system_information(get_sprite(), 65, 60, display, text_colour, bg_colour);

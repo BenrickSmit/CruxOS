@@ -210,22 +210,14 @@ std::string ClockSync::get_millis(){
 void ClockSync::get_wifi_time(){
     // This function will use the Wifi class to get the current time from one of the available time servers.
     // This will update the variable in memory for the wifi time should it exist and is not empty
-    
-    ClockSync *cs = cs->get_instance();
+
     std::string str_SSID, str_PASS;
     std::string wifi_time = "";
     int year, month, day, hour, minute, second;
     char delimiter;
 
-
-    str_SSID = MemoryManagement::get_value(CN_SSID_NAME_VAR);
-    str_PASS = MemoryManagement::get_value(CN_SSID_PASSWORD_VAR);
-
-    // Initialise the wifi with the SSID and Password stored in memory
-    cs->m_wifi.begin(str_SSID.c_str(), str_PASS.c_str());
     //while(wifi_time.empty()){
         wifi_time = MemoryManagement::get_value(CN_WIFI_TIME_VAR);
-        CruxOSLog::Logging(__FUNCTION__, "wifi_time variable is empty", LOG_ERROR);
     //}
 
     // If You got a WIFI time in Memory set the current time to it
@@ -245,6 +237,8 @@ void ClockSync::get_wifi_time(){
         // Reset the variable
         MemoryManagement::modify_variable(CN_WIFI_TIME_VAR, "");
         CruxOSLog::Logging(__FUNCTION__, "wifi_time used to set new time");
+    }else{
+        CruxOSLog::Logging(__FUNCTION__, "wifi_time variable is empty", LOG_ERROR);
     }
     
     CruxOSLog::Logging(__FUNCTION__, "Triggered And Executed");
