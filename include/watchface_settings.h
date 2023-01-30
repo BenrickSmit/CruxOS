@@ -15,7 +15,7 @@ public:
     void draw();
 
 private:
-
+    SystemInfo m_info;
 };
 
 #endif

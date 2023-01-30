@@ -66,6 +66,41 @@ void  display_on_off_screen(){
   CruxOSLog::Logging(__FUNCTION__, "DISPLAY ON/OFF SCREEN");
 }
 
+
+void particle_animation_thread(int block_size, int x_start) {
+  //while (true) {
+    for (int i = 0; i < 100; i++) {
+      int x = random(x_start, x_start + block_size);
+      int y = random(0, block_size);
+      sprite.fillCircle(x, y, 2, TFT_WHITE);
+      delay(100);
+      sprite.fillCircle(x, y, 2, TFT_BLACK);
+    }
+  //}
+}
+
+void animation_thread()
+{
+    while (true)
+    {
+        // Clear the sprite
+        sprite.fillSprite(TFT_BLACK);
+
+        // Draw the particles
+        // ...
+        particle_animation_thread(120, 240);
+
+        // Update the sprite
+        sprite.pushSprite(0, 0);
+
+        // Wait for a specified time interval before redrawing the particles
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
+        CruxOSLog::Logging(__FUNCTION__, "Animation excuting");
+    }
+}
+
+
+
 void setup() {
   // put your setup code here, to run once:
   // Setup BAUD rate.
@@ -82,26 +117,35 @@ void setup() {
   //dm->begin();
   //dm->update_display("24:00");
 
+  // For Battery
+  pinMode(BUILTIN_BATTERY_PIN, OUTPUT);
   
 
   //PowerManagement::power_optimisation();
   MemoryManagement::create_variable(CN_BATTERY_VAR, "25");
   MemoryManagement::create_variable(CN_TIME_VAR, "24:00");
-  MemoryManagement::create_variable(CN_WEATHER_VAR, "Cloudy");
+  MemoryManagement::create_variable(CN_WEATHER_VAR, "broken clouds");
   MemoryManagement::create_variable(CN_WEATHER_TEMP_CURR_VAR, "77");
-  MemoryManagement::create_variable(CN_EST_LOCATION_VAR, "New York");
+  MemoryManagement::create_variable(CN_WEATHER_TEMP_MAX_VAR, "78");
+  MemoryManagement::create_variable(CN_WEATHER_TEMP_MIN_VAR, "76");
+  MemoryManagement::create_variable(CN_EST_LOCATION_VAR, "Tokyo");
+  MemoryManagement::create_variable(CN_EST_LOCATION_UTC_OFFSET_VAR, "9");  // Set Wifi Time to empty
   MemoryManagement::create_variable(CN_BLUETOOTH_CONNECTION_VAR, "Not-Connected");
   MemoryManagement::create_variable(CN_SSID_NAME_VAR, "Unknown");
   MemoryManagement::create_variable(CN_SSID_PASSWORD_VAR, "Unknown");
   MemoryManagement::create_variable(CN_IP_ADDR, "Unknown");
   MemoryManagement::create_variable(CN_MILLIS_SINCE_START, ClockSync::get_millis()); // Should be nonvolatile later
-  MemoryManagement::create_variable(CN_OS_NAME, "CameliaOS"); // should be nonvolatile later
+  MemoryManagement::create_variable(CN_OS_NAME, "Crux:CameliaOS"); // should be nonvolatile later
   MemoryManagement::create_variable(CN_OS_VER, "1.0.1"); // should be nonvolatile later
   MemoryManagement::create_variable(CN_WIFI_TIME_VAR, "");  // Set Wifi Time to empty
+
+  // Location Informa
+  //MemoryManagement::create_variable(CN_, "");
 
   compass.init();
   compass.setSmoothing(10, true);
   //compass.read();
+
 
 
   ClockSync::reset_time();
@@ -121,6 +165,9 @@ void setup() {
 
   pinMode(BUILTIN_BTN3_PIN, INPUT_PULLUP);
   attachInterrupt(BUILTIN_BTN3_PIN, &button3Interrupt, CHANGE);
+
+  //std::thread animation(animation_thread);
+  //animation.detach();
 }
 
 //int lastState = HIGH; // the previous state from the input pin
@@ -143,7 +190,7 @@ void loop() {
     int seconds = ClockSync::get_int_seconds();
     //watch.draw(ClockSync::get_rtc_time());
     
-    //SyncData::get_instance()->sync();
+    SyncData::get_instance()->sync();
 
     //currentState = digitalRead(BUILTIN_BTN2_PIN);
     //digitalRead(BUILTIN_BTN1_PIN);

@@ -67,6 +67,7 @@ const u_int16_t BATTERY_UPDATE_TIMER = 10*1000;          // Check every 10 secon
 constexpr float BUILTIN_GRAVITY_ACCELERATION = 1.0;         // roughly 9.81 m/s^2;
 constexpr float BUILTIN_EPSILON = 0.02;
 enum LOG_LEVEL {LOG_INFO = 0, LOG_WARNING, LOG_ERROR};
+const u_int16_t WIFI_TIMER_COUNTER = 1280;
 
 // Variables to Create at Runtime
 const std::string CN_TIME_VAR = "CURRENT_TIME";
@@ -80,6 +81,7 @@ const std::string CN_SSID_PASSWORD_VAR = "SSID_PASSWORD_SAVED";
 const std::string CN_SSID_NAME_VAR = "SSID_NAME_SAVED";
 const std::string CN_TOTAL_STEPS_VAR = "PEDOMETER_STEPS_COUNT";
 const std::string CN_EST_LOCATION_VAR = "ESTIMATED_LOCATION";
+const std::string CN_EST_LOCATION_UTC_OFFSET_VAR = "ESTIMATED_LOCATION_UTC_OFFSET_FOR_EPOCH";
 const std::string CN_BLUETOOTH_DATA_VAR = "BLUETOOTH_DATA_RECEIVED";
 const std::string CN_BLUETOOTH_CONNECTION_VAR = "BT_STATUS";
 const std::string CN_WIFI_USE_TIMER = "WIFI_USE_TIMER";

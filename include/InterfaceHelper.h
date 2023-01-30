@@ -106,6 +106,16 @@ public:
     /// @param line_width how wide the line should be
     /// @param colour The colour of the line
     static void draw_clock_hand_wide(TFT_eSprite* tft, int center_x, int center_y, int line_inner_offset, int line_length, int angle, int line_width, uint16_t colour);
+    /// @brief This function will draw a clock arm starting at the centre position provided. It can have a customised length and starting offset
+    /// @param tft The TFT_eSprite to draw to
+    /// @param center_x The centre x coordinate
+    /// @param center_y The centre y coordinate
+    /// @param line_inner_offset The outward offset length of the line
+    /// @param line_length The length of the line
+    /// @param angle The angle at which to draw the line
+    /// @param line_width how wide the line should be
+    /// @param colour The colour of the line
+    static void draw_clock_hand_wedge(TFT_eSprite* tft, int center_x, int center_y, int line_inner_offset, int line_length, int angle, int line_width, uint16_t colour);
     /// @brief This function takes the input time and draws stylised clock hands based on it
     /// @param tft The TFT_eSprite to draw to
     /// @param center_x The centre x coordinate
@@ -118,6 +128,18 @@ public:
     /// @param base_color The colour to use for all of the arms
     /// @param volatile_colours Use a colour scheme or one single style
     static void draw_stylised_clock_hands(TFT_eSprite* tft, int center_x, int center_y, int hour, int minute, int second, uint16_t base_colour, bool volatile_colours = false);
+    /// @brief This function takes the input time and draws some stylised clock hands based on it
+    /// @param tft The TFT_eSprite to draw to
+    /// @param center_x The centre x coordinate
+    /// @param center_y The centre y coordinate
+    /// @param length The outward length of the lines
+    /// @param width How wide the lines should be
+    /// @param hour The hours of the time
+    /// @param minute The minutes of the time
+    /// @param second The seconds of the time
+    /// @param base_color The colour to use for all of the arms
+    /// @param volatile_colours Use a colour scheme or one single style 
+    static void draw_wedged_clock_hands(TFT_eSprite* tft, int centre_x, int centre_y, int hour, int minute, int second, uint16_t base_colour, bool volatile_colours = false);
     /// @brief This function takes the input time and draws simple clock hands based on it
     /// @param tft The TFT_eSprite to draw to 
     /// @param center_x The centre x coordinate
@@ -204,6 +226,24 @@ public:
     /// @param selected whether the bounding box has a lighter border and filled interior
     /// @param border Whether the bounding box's border shows.
     static void draw_system_information(TFT_eSprite* tft, int x, int y, std::string system_text, uint16_t colour_bg, uint16_t colour_border, bool selected = false, bool border = false);
+    /// @brief This function displays information in a custom way
+    /// @param tft The TFT_eSprite to draw to
+    /// @param x The x coordinate
+    /// @param y The y coordinate
+    /// @param custom_text The text to display
+    /// @param font_size The text font size
+    /// @param colour_bg The background colour of the bounding box
+    static void draw_custom_text(TFT_eSprite* tft, int x, int y, std::string custom_text, float font_size, uint16_t colour_bg);
+    /// @brief This function displays information in an alignment pattern
+    /// @param tft The TFT_eSprite to draw to
+    /// @param x The x coordinate
+    /// @param y The y coordinate
+    /// @param text The text to display
+    /// @param colour_bg The background colour of the bounding box
+    /// @param font_size The text font size
+    /// @param align_right The alignment value
+    static void draw_defstyle_aligned(TFT_eSprite* tft, int x, int y, std::string text, uint16_t colour_bg, float font_size = 2, bool align_right = true);
+
 
     /// @brief This function returns an integer representation of the hour
     /// @return The hour
@@ -294,6 +334,11 @@ public:
     /// @param tft The object to use for the colour generation
     /// @return a pink colour which roughly fits the overall palette
     static uint16_t get_pink(TFT_eSprite* tft);
+    /// @brief This function returns a colour based on the current battery level
+    /// @param tft The object to use for the colour generation
+    /// @param percentage the battery level
+    /// @return one of 5 different colours that signify the battery level
+    static uint16_t get_battery_colour(TFT_eSprite *tft, int percentage);
     
     /// @brief This function takes and input colour and uses bitwise operations to lighten it
     /// @param colour The input colour to lighten
@@ -344,6 +389,15 @@ public:
     /// @param size The thickness of the drawn line
     /// @param colour The colour of the line
     static void draw_wide_angled_line(TFT_eSprite* tft, int x, int y, int length, int angle, float size, uint16_t colour);
+    /// @brief This function uses the drawWedgeLine function and rotates it around a given centre dot and angle
+    /// @param tft The TFT_eSprite to draw to
+    /// @param x The starting x coordinate
+    /// @param y The starting y coordinate
+    /// @param length The length of the line
+    /// @param angle The angle by which the line should be rotated
+    /// @param size The thickness of the drawn line
+    /// @param colour The colour of the line
+    static void draw_wedge_angled_line(TFT_eSprite* tft, int x, int y, int length, int angle, float size, uint16_t colour);
     /// @brief This function simplifies the circle command in some ways for consistent use
     /// @param tft The TFT_eSprite to draw to
     /// @param x The starting x coordinate

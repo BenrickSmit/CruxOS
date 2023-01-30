@@ -90,6 +90,24 @@ void InterfaceHelper::draw_system_information(TFT_eSprite* tft, int x, int y, st
     InterfaceHelper::set_defstyle_text(tft, system_text, x, y, colour_bg, 2);
 }
 
+void InterfaceHelper::draw_custom_text(TFT_eSprite* tft, int x, int y, std::string custom_text, float font_size, uint16_t colour_bg){
+    InterfaceHelper::set_defstyle_text(tft, custom_text, x, y, colour_bg, font_size);
+}
+
+void InterfaceHelper::draw_defstyle_aligned(TFT_eSprite* tft, int x, int y, std::string text, uint16_t colour_bg, float font_size,
+                                            bool align_right){
+    tft->setCursor(x, y);
+    tft->setTextColor(colour_bg);
+    tft->setTextFont(1);
+    tft->setTextSize(font_size);
+    if(align_right){
+        tft->print(text.c_str());
+    }else{
+        tft->setTextDatum(TL_DATUM);
+        tft->print(text.c_str());
+    }
+}
+
 int InterfaceHelper::get_hour()
 {
     ClockSync* cs = cs->get_instance();
@@ -227,6 +245,34 @@ uint16_t InterfaceHelper::get_orange(TFT_eSprite* tft){
 
 uint16_t InterfaceHelper::get_pink(TFT_eSprite* tft){
     return tft->color565(230, 0, 221);
+}
+
+uint16_t InterfaceHelper::get_battery_colour(TFT_eSprite* tft, int percentage){
+    uint16_t return_colour = InterfaceHelper::get_white(tft);
+
+    switch(percentage){
+            case 0 ... 20 : {
+                return_colour = InterfaceHelper::get_red(tft);
+                break;
+            }case 21 ... 40 : {
+                return_colour = InterfaceHelper::get_orange(tft);
+                break;
+            }case 41 ... 60 : {
+                return_colour = InterfaceHelper::get_yellow(tft);
+                break;
+            }case 61 ... 80 :{
+                return_colour = InterfaceHelper::lighten_colour(InterfaceHelper::get_green(tft), 40);
+                break;
+            }case 81 ... 100 :{
+                return_colour = InterfaceHelper::get_green(tft);
+                break;
+            }
+            default: {
+                return_colour = InterfaceHelper::get_white(tft);
+            }
+        }
+
+    return return_colour;
 }
 
 uint16_t InterfaceHelper::get_blue(TFT_eSprite* tft){
@@ -526,27 +572,7 @@ void InterfaceHelper::draw_battery_level(TFT_eSprite* tft, int x, int y, float p
     auto battery_bg_colour = bg_colour;
 
     if(volatile_colours) {
-        switch(progress_int){
-            case 0 ... 20 : {
-                battery_fill_colour = InterfaceHelper::get_red(tft);
-                break;
-            }case 21 ... 40 : {
-                battery_fill_colour = InterfaceHelper::get_orange(tft);
-                break;
-            }case 41 ... 60 : {
-                battery_fill_colour = InterfaceHelper::get_yellow(tft);
-                break;
-            }case 61 ... 80 :{
-                battery_fill_colour = InterfaceHelper::lighten_colour(InterfaceHelper::get_green(tft), 40);
-                break;
-            }case 81 ... 100 :{
-                battery_fill_colour = InterfaceHelper::get_green(tft);
-                break;
-            }
-            default: {
-                battery_fill_colour = InterfaceHelper::get_white(tft);
-            }
-        }
+        battery_fill_colour = InterfaceHelper::get_battery_colour(tft, progress_int);
     }
 
     tft->fillRoundRect(x, y, width, height, 2, battery_bg_colour);
@@ -644,6 +670,18 @@ void InterfaceHelper::draw_clock_hand_wide(TFT_eSprite *tft, int centre_x, int c
     tft->drawWideLine(x1, y1, x2, y2, line_width, colour);
 }
 
+void InterfaceHelper::draw_clock_hand_wedge(TFT_eSprite* tft, int centre_x, int centre_y, int line_inner_offset,
+                                            int line_length, int angle, int line_width, uint16_t colour){
+    auto radians = (angle * M_PI)/180.0;
+
+    // Positions
+    int x1 = centre_x + (line_inner_offset+line_length) * cos(radians);
+    int y1 = centre_y + (line_inner_offset+line_length) * sin(radians);
+    int x2 = centre_x + line_length * cos(radians);
+    int y2 = centre_y + line_length * sin(radians);
+    tft->drawWedgeLine(x1, y1, x2, y2, line_width/2, line_width*1.2, colour);
+}
+
 void InterfaceHelper::draw_progress_bar(TFT_eSprite* tft, int x, int y, int length, int width, int percentage, uint16_t colour_fill, uint16_t colour_empty){
     // Calculate the width of the filled portion of the bar
     int filled_width = (percentage * length) / 100;
@@ -663,6 +701,13 @@ void InterfaceHelper::draw_wide_angled_line(TFT_eSprite* tft, int x, int y, int 
     int x2 = x + (length * cos(angle));
     int y2 = y + (length * sin(angle));
     tft->drawWideLine(x, y, x2, y2, size, colour);
+}
+
+void InterfaceHelper::draw_wedge_angled_line(TFT_eSprite* tft, int x, int y, int length, int angle, float size,
+                                             uint16_t colour){
+    int x2 = x + (length * cos(angle));
+    int y2 = y + (length * sin(angle));
+    tft->drawWedgeLine(x, y, x2, y2, size, size/2.0, colour);
 }
 
 void InterfaceHelper::draw_sized_circle(TFT_eSprite* tft, int x, int y, int size, uint16_t colour){
@@ -754,8 +799,51 @@ void InterfaceHelper::draw_stylised_clock_hands(TFT_eSprite* tft, int centre_x, 
     tft->fillCircle(centre_x, centre_y, 4, extra_colour);
 }
 
+void InterfaceHelper::draw_wedged_clock_hands(TFT_eSprite* tft, int centre_x, int centre_y, int hour, int minute,
+                                              int second, uint16_t base_colour, bool volatile_colours){
+    // Get the angles
+    int hour_angle = InterfaceHelper::convert_to_angle(hour, 12);
+    int minute_angle = InterfaceHelper::convert_to_angle(minute, 60);
+    int second_angle = InterfaceHelper::convert_to_angle(second, 60);
+    // Flip the angles
+    int offset = 90;
+    hour_angle -= offset;
+    minute_angle -= offset;
+    second_angle -= offset;
+    // Set the colour
+    auto hour_colour = base_colour;
+    auto minute_colour = base_colour;
+    auto second_colour = base_colour;
+    auto extra_colour = base_colour;
+
+    if (volatile_colours){
+        minute_colour = InterfaceHelper::get_split_complementary_colours(base_colour).at(1);
+        second_colour = InterfaceHelper::get_split_complementary_colours(base_colour).at(2);
+        extra_colour = InterfaceHelper::get_split_complementary_colours(base_colour).at(3);
+    }
+
+    // Draw the thin arms
+    //InterfaceHelper::draw_clock_hand(tft, centre_x, centre_y, 0, SCREEN_WIDTH_CENTRE*0.5, hour_angle, hour_colour);
+    //InterfaceHelper::draw_clock_hand(tft, centre_x, centre_y, 0, SCREEN_WIDTH_CENTRE*0.7, minute_angle, minute_colour);
+    //InterfaceHelper::draw_clock_hand(tft, centre_x, centre_y, 0, SCREEN_WIDTH_CENTRE*0.6, second_angle, second_colour);
+
+    // Draw the Wedge arms
+    InterfaceHelper::draw_clock_hand_wedge(tft, centre_x, centre_y, SCREEN_WIDTH_CENTRE*0.5, SCREEN_WIDTH_CENTRE*0.2, hour_angle, 6,hour_colour);
+    InterfaceHelper::draw_clock_hand_wedge(tft, centre_x, centre_y, SCREEN_WIDTH_CENTRE*0.7, SCREEN_WIDTH_CENTRE*0.2, minute_angle, 4, minute_colour);
+    InterfaceHelper::draw_clock_hand_wedge(tft, centre_x, centre_y, SCREEN_WIDTH_CENTRE*0.6, SCREEN_WIDTH_CENTRE*0.2, second_angle, 2, second_colour);
+
+    // Draw the battery arms
+    //InterfaceHelper::draw_clock_hand(tft, centre_x, centre_y, SCREEN_WIDTH_CENTRE*0.2, SCREEN_WIDTH_CENTRE*0.4, hour_angle, 6, hour_colour);
+    //InterfaceHelper::draw_clock_hand(tft, centre_x, centre_y, SCREEN_WIDTH_CENTRE*0.2, SCREEN_WIDTH_CENTRE*0.6, minute_angle, 4, minute_colour);
+    //InterfaceHelper::draw_clock_hand_wide(tft, centre_x, centre_y, SCREEN_WIDTH_CENTRE*0.2, SCREEN_WIDTH_CENTRE*0.5, second_angle, 2, second_colour);
+
+    // Draw a small circle in the middle
+    tft->fillCircle(centre_x, centre_y, 4, extra_colour);                                             
+}
+
 void InterfaceHelper::draw_clock_hands(TFT_eSprite* tft, int centre_x, int centre_y, int hour, int minute, int second,
-                                       uint16_t base_colour, bool volatile_colours){
+                                       uint16_t base_colour, bool volatile_colours)
+{
     // Get the angles
     int hour_angle = InterfaceHelper::convert_to_angle(hour, 12);
     int minute_angle = InterfaceHelper::convert_to_angle(minute, 60);
@@ -787,7 +875,13 @@ void InterfaceHelper::draw_clock_hands(TFT_eSprite* tft, int centre_x, int centr
 }
 
 void InterfaceHelper::draw_steps_text(TFT_eSprite* tft, int x, int y, int steps, uint16_t colour_fill){
-    std::string steps_string = std::to_string(steps);
+    std::string steps_string = "";
+    const int THRESHOLD = 1000;
+    if(steps>=THRESHOLD){
+        steps_string = std::to_string(steps/THRESHOLD)+"K";
+    }else{
+        steps_string = std::to_string(steps);
+    }
     std::string output = "Total Steps Output: "+steps_string;
     CruxOSLog::Logging(__FUNCTION__, output);
     set_defstyle_text(tft, steps_string.c_str(), x, y, colour_fill, 2); 
@@ -830,5 +924,5 @@ void InterfaceHelper::draw_location_text(TFT_eSprite* tft, int x, int y, std::st
 }
 
 void InterfaceHelper::draw_weather_text(TFT_eSprite* tft, int x, int y, std::string weather_text, uint16_t colour_fill){
-    set_defstyle_text(tft, weather_text, x, y, colour_fill, 14);
+    set_defstyle_text(tft, weather_text, x, y, colour_fill, 2);
 }

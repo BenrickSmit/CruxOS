@@ -223,10 +223,10 @@ void ClockSync::get_wifi_time(){
 
     // Initialise the wifi with the SSID and Password stored in memory
     cs->m_wifi.begin(str_SSID.c_str(), str_PASS.c_str());
-    while(wifi_time.empty()){
+    //while(wifi_time.empty()){
         wifi_time = MemoryManagement::get_value(CN_WIFI_TIME_VAR);
         CruxOSLog::Logging(__FUNCTION__, "wifi_time variable is empty", LOG_ERROR);
-    }
+    //}
 
     // If You got a WIFI time in Memory set the current time to it
     if (!wifi_time.empty()) {
@@ -235,9 +235,12 @@ void ClockSync::get_wifi_time(){
                     hour >> delimiter >> minute >> delimiter >> second;
 
         // Set the new time
+        set_year(year);
+        set_month(month);
+        set_day(day);
         set_hours(hour);
         set_minutes(minute);
-        set_minutes(second);
+        set_seconds(second);
 
         // Reset the variable
         MemoryManagement::modify_variable(CN_WIFI_TIME_VAR, "");

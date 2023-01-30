@@ -10,12 +10,14 @@
 #define SYNC_DATA_H
 
 #include <Arduino.h>
+#include <esp_wifi.h>
 
 #include <thread>
 
 #include <ClockSync.h>
 #include <MemoryManagement.h>
 #include <WifiModule.h>
+#include <BatteryInfo.h>
 #include <cruxos_constants.h>
 
 
@@ -25,10 +27,7 @@ public:
     static SyncData* get_instance();
 
     void sync();
-
-    static void button_setup();
-    static void button_update();
-
+    void setup();
 
 protected:
 

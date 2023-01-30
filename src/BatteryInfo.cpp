@@ -209,3 +209,22 @@ void BatteryInfo::battery_loop(){
     // start the timer
     esp_timer_start_periodic(timer_handle, BATTERY_UPDATE_TIMER); // check every 10 seconds
 }
+
+void BatteryInfo::battery_update(){
+    pinMode(BUILTIN_BATTERY_PIN, OUTPUT);
+    BatteryInfo *bi = bi->get_instance();
+    int MAX_COUNT = 10;
+    // Get The Average Battery Value
+    int bat_vol =0;
+    for(auto i = 0; i < MAX_COUNT; i++)
+        bat_vol += analogRead(BUILTIN_BATTERY_PIN);
+
+    bat_vol /= MAX_COUNT;
+    //float battery_level = (voltage - MIN_VOLTAGE) / (MAX_VOLTAGE - MIN_VOLTAGE) * 100;
+    float MAX_VOL = 135;
+    float MIN_VOL = 1;
+    CruxOSLog::Logging(__FUNCTION__, std::to_string(bat_vol));
+    int perc = (bat_vol - MIN_VOL) / (MAX_VOL - MIN_VOL) * 100;
+
+    bi->set_battery_percentage(perc);
+}

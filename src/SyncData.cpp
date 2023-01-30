@@ -8,8 +8,12 @@ SyncData::SyncData() {
     // Inits all the necessary variables
     ClockSync *cs = cs->get_instance();
     m_update_battery = false;
-    m_timer = 60;// * 1000;                // WIFI_CONN_COUNTER;
+    m_timer = 6 * 1000;                // WIFI_CONN_COUNTER;
+    //BatteryInfo *bi = bi->get_instance();
+    //bi->battery_loop();
 
+    // set the timer
+    m_timer_millis = (2* m_timer);
 }
 
 // Get the instance of the SyncData singleton
@@ -23,19 +27,35 @@ SyncData* SyncData::get_instance() {
 void SyncData::sync(){
     // Can only either use WiFi or update battery value, so use them exclusively
     if (get_current_millis() >= get_timer_millis()){
-        // Based on Internet/ Bluetooth connectivity find the location and store it
-        // Use the stored location to set up timezone
+        // The wifi module and the battery cannot be read at the same time.
+        auto error = esp_wifi_start();
+
         // Use the stored location to get weather data
 
+        
+
         // Get Wifi Information
+        CruxOSLog::Logging(__FUNCTION__, ">>>Executed WiFi functions");
         update_time();
+
+        // Stop WifiModule temporarily
+        error = esp_wifi_stop();
 
         // Reset the timer values
         set_new_timer_millis(std::stol(ClockSync::get_millis().c_str()));
     }else{
         // Get The Battery Information
+        BatteryInfo *bi = bi->get_instance();
+        bi->battery_update();
+        // Only modify the saved variable if it isn't 0
+        if(bi->get_battery_percentage() > 0 && bi->get_battery_percentage() <= 100){
+            MemoryManagement::modify_variable(CN_BATTERY_VAR, std::to_string(bi->get_battery_percentage()));
+        }
+        std::string output_str = "Exectuted Battery Functions: " + MemoryManagement::get_value(CN_BATTERY_VAR);
+        CruxOSLog::Logging(__FUNCTION__, output_str);
     }
-
+    std::string timer_str = "TIME ("+std::to_string(get_current_millis())+"): TIMER("+std::to_string(get_timer_millis())+")";
+    CruxOSLog::Logging(__FUNCTION__, timer_str.c_str());
 
     // Update The Time
     //ClockSync::time_update_loop();
@@ -48,30 +68,9 @@ void SyncData::sync(){
 
 }
 
-void SyncData::button_setup(){
-    pinMode(BUILTIN_BTN1_PIN, INPUT_PULLUP);
-    pinMode(BUILTIN_BTN2_PIN, INPUT_PULLUP);
-    pinMode(BUILTIN_BTN3_PIN, INPUT_PULLUP);
-}
-
-void SyncData::button_update(){
-    SyncData* sd = sd->get_instance();
-
-    sd->m_button1_curr_state = digitalRead(BUILTIN_BTN1_PIN);
-    sd->m_button2_curr_state = digitalRead(BUILTIN_BTN2_PIN);
-    sd->m_button3_curr_state = digitalRead(BUILTIN_BTN3_PIN);
-
-    if(sd->m_button1_curr_state == HIGH && sd->m_button1_state == LOW){
-        CruxOSLog::Logging(__FUNCTION__, "BUTTON 1 PRESSED");
-    }
-
-    if(sd->m_button2_curr_state == HIGH && sd->m_button2_state == LOW){
-        CruxOSLog::Logging(__FUNCTION__, "BUTTON 2 PRESSED");
-    }
-
-    if(sd->m_button3_curr_state == HIGH && sd->m_button3_state == LOW){
-        CruxOSLog::Logging(__FUNCTION__, "BUTTON 3 PRESSED");
-    }
+void SyncData::setup(){
+    BatteryInfo *bi = bi->get_instance();
+    bi->battery_loop();
 }
 
 void SyncData::update_time(){
@@ -86,8 +85,12 @@ void SyncData::update_time(){
     std::string str_SSID = MemoryManagement::get_value(CN_SSID_NAME_VAR);
     std::string str_PASS = MemoryManagement::get_value(CN_SSID_PASSWORD_VAR);
     sd->m_wifi.begin(str_SSID.c_str(), str_PASS.c_str());
+    sd->m_wifi.get_city();
     sd->m_wifi.get_time();
+    std::string output = MemoryManagement::get_value(CN_WIFI_TIME_VAR);
+    CruxOSLog::Logging(__FUNCTION__, output.c_str());
     cs->get_wifi_time();
+    sd->m_wifi.stop();
 }
 
 void SyncData::update_pedometer(){
@@ -106,7 +109,7 @@ void SyncData::set_new_timer_millis(long input_milliseconds){
     // This function will take an input of a long value for the current milliseconds
     // and then add the required time stored in the class to it.
     SyncData *sd = sd->get_instance();
-    sd->m_timer_millis += sd->m_timer;
+    sd->m_timer_millis += sd->m_timer*12*100;
 }
 
 long SyncData::get_current_millis(){

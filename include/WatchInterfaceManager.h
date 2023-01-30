@@ -8,6 +8,7 @@
 #include <watchface_digital.h>
 #include <watchface_settings.h>
 #include <watchface_hitman.h>
+#include <watchface_withings.h>
 
 #include <vector>
 

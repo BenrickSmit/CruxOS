@@ -10,6 +10,7 @@
 
 #include <Arduino.h>
 
+#include <CruxOSLog.h>
 #include <cruxos_constants.h>
 
 class BatteryInfo {
@@ -40,6 +41,8 @@ public:
     /// @brief This function is a function that will update all the information about the battery every 
     ///     BATTERY_UPDATE_TIMER seconds
     static void battery_loop();
+    /// @brief This function will call the battery information once
+    static void battery_update();
 
 protected:
     /// @brief This function sets the battery voltage to be saved

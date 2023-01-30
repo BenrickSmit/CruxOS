@@ -37,7 +37,17 @@ void watchface_hitman::draw(){
     // Week day
     InterfaceHelper::draw_weekday_text(get_sprite(), 170, 60, text_colour, true);
     // Weather
-    InterfaceHelper::draw_weather_status(get_sprite(), 48, 190, InterfaceHelper::get_weather_string(WEATHER_CODE(1)));
+    std::string weather_information = MemoryManagement::get_value(CN_WEATHER_VAR);
+    std::string weather_curr_temp = MemoryManagement::get_value(CN_WEATHER_TEMP_CURR_VAR);
+    std::string weather_min_temp = MemoryManagement::get_value(CN_WEATHER_TEMP_MIN_VAR);
+    std::string weather_max_temp = MemoryManagement::get_value(CN_WEATHER_TEMP_MAX_VAR);
+    bool display_weather_data = (weather_information != "N/A" ? true: false);
+
+    if(display_weather_data){
+        // Only display the weather information if it can get the relevant data
+        InterfaceHelper::draw_weather_status(get_sprite(), 48, 190, weather_information.c_str());
+    }
+    
 
     // Battery
     std::string battery_level_str = MemoryManagement::get_value(CN_BATTERY_VAR.c_str());
